@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    $(function () {
+      function return_embed(fs_id) {
+        var embed =
+          '<iframe style="display:inline-block;" frameborder="0" scrolling="no" src="https://freesound.org/embed/sound/iframe/';
+        embed += fs_id;
+        embed += '/simple/medium/" width="481" height="86"></iframe>';
+        return embed
+      }
+
+      function return_form(fs_id) {
+        return `<form style="display:inline-block;" action="" id="form-` + fs_id + `">
+            <input type="radio" name="radAnswer" value="1"> Yes<br>
+            <input type="radio" name="radAnswer" value="0"> No<br>
+            <br>
+        </form>
+        `
+      }
+
+      function get_answers() {
+        var elements = $('input[name=radAnswer]:checked');
+        var answers = [];
+        elements.each(function (idx, el) {
+          answers.push([$(el).parents('div').attr('id'), $(el).val()]);
+        });
+        return answers
+      }
+
+      function save_answers() {
+        (function (console) {
+          console.save = function (data, filename) {
+
+            if (!data) {
+              console.error('Console.save: No data')
+              return;
+            }
+
+            if (!filename) filename = 'console.json'
+
+            if (typeof data === "object") {
+              data = JSON.stringify(data, undefined, 4)
+            }
+
+            var blob = new Blob([data], {
+                type: 'text/json'
+              }),
+              e = document.createEvent('MouseEvents'),
+              a = document.createElement('a')
+
+            a.download = filename
+            a.href = window.URL.createObjectURL(blob)
+            a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+            e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false,
+              false, false, false, 0, null)
+            a.dispatchEvent(e)
+          }
+        })(console)
+
+        var data = get_answers();
+        console.save(data, 'data.json')
+      }
+
+      $.getJSON("example_sounds.json", function (data) {
+        var items = [];
+        $.each(data, function (key, val) {
+          items.push("<div style='border-style:solid; border-color:gray; width:600px;' id='" +
+            val + "'>" + return_embed(val) + return_form(val) + "</div>");
+        });
+
+        $("<ul/>", {
+          "class": "my-new-list",
+          html: items.join("<br>")
+        }).appendTo("#sound-container");
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <h1>Are these sounds considered single events?</h1>
+  <div id="sound-container"></div>
+</body>
+
+</html>
