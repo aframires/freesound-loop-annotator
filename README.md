@@ -1,9 +1,14 @@
 # percussive-annotator
 
+Insall dependencies:
+`virtualenv venv`
+`source venv/bin/activate`
+`pip install -r requirements.txt`
+
 Start server:
-`python3 start_server.py`
+`python app.py`
 
 With your browser go to:
-`http://localhost:8100/`
+`http://localhost:5000/?p=1`
 
-Annotate and save your answers.
+Annotate and submit your answers.
