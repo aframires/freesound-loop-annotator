@@ -10,15 +10,20 @@
     $(function () {
       function get_answers() {
         var elements = $('input[name=radAnswer]:checked');
-        var answers = [];
+        var answers = {};
         elements.each(function (idx, el) {
-          answers.push([$(el).parents('div').attr('id'), $(el).val()]);
+          answers[$(el).parents('div').attr('id')] = $(el).val();
+          // answers.push([, $(el).val()]);
         });
         return answers
       }
 
       function send_answers() {
         var answers = get_answers();
+        var data = {
+          answers: answers,
+          page: '{{page}}'
+        }
         $.ajax({
             url: '/',
             type: 'post',
@@ -28,7 +33,7 @@
                 console.log(data);
                 window.location.replace("/?p={{page+1}}");
             },
-            data: JSON.stringify(answers)
+            data: JSON.stringify(data)
         });
       }
 
