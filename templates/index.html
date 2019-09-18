@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    input[type='radio'] { transform: scale(1.5); }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    $(function () {
+      function get_answers() {
+        var elements = $('input[name=radAnswer]:checked');
+        var answers = [];
+        elements.each(function (idx, el) {
+          answers.push([$(el).parents('div').attr('id'), $(el).val()]);
+        });
+        return answers
+      }
+
+      function send_answers() {
+        var answers = get_answers();
+        $.ajax({
+            url: '/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+                window.location.replace("/?p={{page+1}}");
+            },
+            data: JSON.stringify(answers)
+        });
+      }
+
+      $('#submit-button').click(function() {
+        send_answers();
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <h1>Are these sounds considered single events?</h1>
+  <div id="sound-container">
+    {% for sound_id in sound_ids %}
+      <div style="border-style:solid; border-color:gray; width:600px;" id="{{sound_id}}">
+        <iframe style="display:inline-block;" frameborder="0" scrolling="no" width="481" height="86"
+          src="https://freesound.org/embed/sound/iframe/{{sound_id}}/simple/medium/">
+        </iframe>
+        <form style="display:inline-block;" action="" id="form-{{sound_id}}">
+          <input type="radio" name="radAnswer" value="1"> Yes<br>
+          <input type="radio" name="radAnswer" value="0"> No<br>
+          <br>
+      </form>
+      </div>
+    {% endfor %}
+  </div>
+  <button id="submit-button">submit</button>
+</body>
+
+</html>
