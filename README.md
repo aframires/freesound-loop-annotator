@@ -1,9 +1,11 @@
 # percussive-annotator
 
 Insall dependencies:
-`virtualenv venv`
-`source venv/bin/activate`
-`pip install -r requirements.txt`
+```shell
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 Start server:
 `python app.py`
