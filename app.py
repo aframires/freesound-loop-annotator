@@ -9,6 +9,7 @@ app = Flask(__name__, static_url_path='/static')
 NUM_SOUNDS_PER_PAGE = 20
 
 # Enter here the path to the file containing the ids of the sounds you have to annotate.
+# e.g. 'static/sound_ids_1.json'
 PATH_TO_FILE_WITH_SOUND_IDS = 'static/example_sounds.json'
 
 
