@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 50%;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+    $(function () {
+      function get_answers() {
+        var elements = $('input[name=radAnswer]:checked');
+        var elements = $('.user-input:checked');
+        var answers = {};
+        elements.each(function (idx, el) {
+          answers[$(el).parents('div').attr('id')] = $(el).val();
+          // answers.push([, $(el).val()]);
+        });
+        return answers
+      }
+
+      function send_answers() {
+        var answers = get_answers();
+        var data = {
+          answers: answers,
+          page: '{{page}}'
+        }
+        $.ajax({
+            url: '/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+                window.location.replace("/?p={{page+1}}");
+            },
+            data: JSON.stringify(data)
+        });
+      }
+
+      $('#submit-button').click(function() {
+        send_answers();
+      });
+    });
+  </script>
+
+</head>
+
+
+<body>
+    <div class="row">
+        <div class="column">
+            <h1>{{loop_name}}</h1>
+            <p><b>Description:</b> {{description}}</p>
+            <p><b>Tags:</b> {{tags}}</p>
+            <img src="{{sound-image}}" alt="{{sound-image}}">
+            
+        </div>
+
+        <div class="column">
+            <p>Is the loop harmonic and/or percussive:</p>
+            <form>
+                <input type="checkbox" name="harmonic" value="harmonic">Harmonic<br>
+                <input type="checkbox" name="percussive" value="percussive">Percussive<br>
+            </form>
+
+            <p>Does it contain a single or multiple instruments?</p>
+            <form>
+                <input type="radio" name="instrumentation" value="single"> Single<br>
+                <input type="radio" name="instrumentation" value="multiple"> Multiple<br>
+            </form>
+
+            <p>Are these instruments present?</p>
+            <form>
+                {% for instrument in instruments %}
+                <input type="checkbox" name="{{instrument}}" value="{{instrument}}"> {{instrument}}<br>
+                {% endfor %}
+
+                <p>Any other instruments? (Add the instrument names separated by commas)</p>
+                <input type="text" name="other_instruments" size=80>
+            </form>
+
+            <p>What is the BPM?</p>
+            <form>
+                <input type="text" name="bpm" value="{{guessedBPM}}">
+            </form>
+
+            <p>What is the time signature?</p>
+            <form>
+                <input type="text" name="metricUpper" value="4"> / <input type="text" name="metricLower" value="4">
+            </form>
+
+            <p>What is the key?</p>
+            <select>
+                <option value="c" {% if guessedKey=="c"  %} selected{% endif %}>C</option>
+                <option value="c#" {% if guessedKey=="c#" %} selected{% endif %}>C#</option>
+                <option value="d" {% if guessedKey=="d"  %} selected{% endif %}>D</option>
+                <option value="d#" {% if guessedKey=="d#" %} selected{% endif %}>D#</option>
+                <option value="e" {% if guessedKey=="e"  %} selected{% endif %}>E</option>
+                <option value="f" {% if guessedKey=="f"  %} selected{% endif %}>F</option>
+                <option value="f#" {% if guessedKey=="f#" %} selected{% endif %}>F#</option>
+                <option value="g" {% if guessedKey=="g"  %} selected{% endif %}>G</option>
+                <option value="g#" {% if guessedKey=="g#" %} selected{% endif %}>G#</option>
+                <option value="a" {% if guessedKey=="a"  %} selected{% endif %}>A</option>
+                <option value="a#" {% if guessedKey=="a#" %} selected{% endif %}>A#</option>
+                <option value="b" {% if guessedKey=="b"  %} selected{% endif %}>B</option>
+            </select>
+            <select>
+                <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
+                <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
+            </select>
+
+            <p>Does it belong to any of this genres?</p>
+            <form>
+                {% for genre in genres %}
+                <input type="checkbox" name="{{genre}}" value="{{genre}}"> {{genre}}<br>
+                {% endfor %}
+            </form>
+
+
+            <p>Any comments?</p>
+            <form>
+                <textarea name="comments" cols="40" rows="5"></textarea>
+            </form>
+
+            <p> <input type="checkbox" name="discard" value="discard"> Discard this loop from our dataset? (If it is not
+                a loop) <br></p>
+            <br>
+            <button id="submit-button" style="margin-left:100px; width:150px; height: 100px;">submit</button>
+            <br>
+        </div>
+    </div>
+</body>
+
+</html>
