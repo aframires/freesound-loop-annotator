@@ -61,11 +61,12 @@
             <h1>{{loop_name}}</h1>
             <p><b>Description:</b> {{description}}</p>
             <p><b>Tags:</b> {{tags}}</p>
-            <img src="{{sound-image}}" alt="{{sound-image}}">
+            <img src="{{sound_image}}" alt="{{sound_image}}">
             
         </div>
 
         <div class="column">
+<!--
             <p>Is the loop harmonic and/or percussive:</p>
             <form>
                 <input type="checkbox" name="harmonic" value="harmonic">Harmonic<br>
@@ -88,6 +89,19 @@
                 <input type="text" name="other_instruments" size=80>
             </form>
 
+-->
+
+            <p>What elements does the loop conatin?</p>
+            <form>
+                <input type="checkbox" name="drums" value="drums"> Drums<br>
+                <input type="checkbox" name="bass" value="bass"> Bass<br>
+                <input type="checkbox" name="chords" value="chords"> Chords<br>
+                <input type="checkbox" name="melody" value="melody"> Melody<br>
+                <input type="checkbox" name="fx" value="fx"> Sound FX<br>
+                <input type="checkbox" name="vocal" value="vocal"> Vocal<br>
+            </form>
+
+            
             <p>What is the BPM?</p>
             <form>
                 <input type="text" name="bpm" value="{{guessedBPM}}">
