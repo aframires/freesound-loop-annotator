@@ -14,43 +14,129 @@
     </style>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://tonejs.github.io/build/Tone.js"></script>
     <script>
-    $(function () {
-      function get_answers() {
-        var elements = $('input[name=radAnswer]:checked');
-        var elements = $('.user-input:checked');
-        var answers = {};
-        elements.each(function (idx, el) {
-          answers[$(el).parents('div').attr('id')] = $(el).val();
-          // answers.push([, $(el).val()]);
-        });
-        return answers
-      }
+        $(function () {
+            var metronome = new Tone.Player("../sounds/woodblock.wav").toMaster();
+            var audio = new Tone.Player('{{audio_file}}').toMaster();
+            var synth = new Tone.PolySynth(6, Tone.Synth, {
+                oscillator: {
+                    type: "sine"
+                }
+            }).toMaster();
 
-      function send_answers() {
-        var answers = get_answers();
-        var data = {
-          answers: answers,
-          page: '{{page}}'
-        }
-        $.ajax({
-            url: '/',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (data) {
-                console.log(data);
-                window.location.replace("/?p={{page+1}}");
-            },
-            data: JSON.stringify(data)
-        });
-      }
+            Tone.Transport.bpm.value = $("input[name=bpm]").val();
+            Tone.Buffer.onload = function () {
+                //this will start the player on every quarter note
+                Tone.Transport.setInterval(function (time) {
+                    metronome.start(time);
+                }, "4n");
+                //start the Transport for the events to start
+                Tone.Transport.start();
+            };
 
-      $('#submit-button').click(function() {
-        send_answers();
-      });
-    });
-  </script>
+
+            function get_answers() {
+                var answers = {};
+                answers.instrumentation = {
+                    drums: $("input[name=drums]").is(":checked"),
+                    bass: $("input[name=bass]").is(":checked"),
+                    chords: $("input[name=chords]").is(":checked"),
+                    melody: $("input[name=melody]").is(":checked"),
+                    fx: $("input[name=fx]").is(":checked"),
+                    vocal: $("input[name=vocal]").is(":checked")
+                }
+                answers.bpm = $("input[name=bpm]").val()
+                answers.signature = String($("input[name=metricUpper]").val()) + "/" + String($("input[name=metricLower]").val())
+                answers.key = $('#key').val()
+                answers.mode = $('#mode').val()
+
+
+                answers.genres = []
+                $("#genres input:checkbox:checked").each(function () {
+                    answers.genres.push($(this).val())
+                });
+
+                answers.comments = $("textarea#comments").val()
+                answers.discard = $("input[name=discard]").is(":checked")
+
+                return answers
+            }
+
+            function send_answers() {
+                var answers = get_answers();
+                var data = {
+                    answers: answers,
+                    page: '{{page}}',
+                    id: '{{sound_ids}}'
+                }
+                $.ajax({
+                    url: '/',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        console.log(data);
+                        window.location.replace("/?p={{page+1}}");
+                    },
+                    data: JSON.stringify(data)
+                });
+            }
+
+            function startAudioMetronome() {
+                submitBPM()
+                Tone.Transport.start()
+                audio.start()
+            }
+
+            function startAudio() {
+                audio.restart()
+            }
+
+            function stopAudio() {
+                audio.stop()
+            }
+
+            function startMetronome() {
+                submitBPM()
+                Tone.Transport.start();
+            }
+            function stopMetronome() {
+                Tone.Transport.stop();
+            }
+            function submitBPM() {
+                Tone.Transport.bpm.value = $("input[name=bpm]").val();
+            }
+
+            function startChords() {
+                var chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+                var index = chords.indexOf(('#key').val())
+                var chordsToUse = []
+                if ($('#mode').val() == "maj") {
+                    chordsToUse = [chords[index], chords[index + 4], chords[index + 7]]
+                }
+
+                if ($('#mode').val() == "min") {
+                    chordsToUse = [chords[index], chords[index + 3], chords[index + 7]]
+                }
+                synth.triggerAttack(chordToUse)
+            }
+
+            function stopChords() {
+                synth.releaseAll()
+            }
+
+            $('#submit-button').click(function () { send_answers(); });
+            $('#startAudioMetronome').click(function () { startAudioMetronome(); });
+            $('#startAudio').click(function () { startAudio(); });
+            $('#stopAudio').click(function () { stopAudio(); });
+            $('#startMetronome').click(function () { startMetronome(); });
+            $('#stopMetronome').click(function () { stopMetronome(); });
+            $('#startChords').click(function () { startChords(); });
+            $('#stopChords').click(function () { stopChords(); });
+
+        });
+    </script>
 
 </head>
 
@@ -61,12 +147,26 @@
             <h1>{{loop_name}}</h1>
             <p><b>Description:</b> {{description}}</p>
             <p><b>Tags:</b> {{tags}}</p>
-            <img src="{{sound_image}}" alt="{{sound_image}}">
-            
+            <!-- <img stlye="width:90%;" src="{{sound_image}}" alt="{{sound_image}}"> -->
+            <iframe style="display:inline-block;" frameborder="0" scrolling="no" width="481" height="86"
+                src="https://freesound.org/embed/sound/iframe/{{sound_ids}}/simple/medium/">
+            </iframe>
+            <br>
+            <button id="startAudioMetronome">Play Audio and Metronome</button>
+            <button id="startAudio">Restart Audio</button>
+            <button id="stopAudio">Stop Audio and Metronome</button>
+            <button id="startMetronome">Play Metronome</button>
+            <button id="stopMetronome">Stop Metronome</button>
+            <button id="startChords">Play Chords</button>
+            <button id="stopChords">Stop Chords</button>
+
+            <button id="submit-button" style="margin-left:100px; width:150px; height: 100px;">submit</button>
+            <br>
+
         </div>
 
         <div class="column">
-<!--
+            <!--
             <p>Is the loop harmonic and/or percussive:</p>
             <form>
                 <input type="checkbox" name="harmonic" value="harmonic">Harmonic<br>
@@ -101,7 +201,7 @@
                 <input type="checkbox" name="vocal" value="vocal"> Vocal<br>
             </form>
 
-            
+
             <p>What is the BPM?</p>
             <form>
                 <input type="text" name="bpm" value="{{guessedBPM}}">
@@ -113,43 +213,42 @@
             </form>
 
             <p>What is the key?</p>
-            <select>
-                <option value="c" {% if guessedKey=="c"  %} selected{% endif %}>C</option>
-                <option value="c#" {% if guessedKey=="c#" %} selected{% endif %}>C#</option>
-                <option value="d" {% if guessedKey=="d"  %} selected{% endif %}>D</option>
-                <option value="d#" {% if guessedKey=="d#" %} selected{% endif %}>D#</option>
-                <option value="e" {% if guessedKey=="e"  %} selected{% endif %}>E</option>
-                <option value="f" {% if guessedKey=="f"  %} selected{% endif %}>F</option>
-                <option value="f#" {% if guessedKey=="f#" %} selected{% endif %}>F#</option>
-                <option value="g" {% if guessedKey=="g"  %} selected{% endif %}>G</option>
-                <option value="g#" {% if guessedKey=="g#" %} selected{% endif %}>G#</option>
-                <option value="a" {% if guessedKey=="a"  %} selected{% endif %}>A</option>
-                <option value="a#" {% if guessedKey=="a#" %} selected{% endif %}>A#</option>
-                <option value="b" {% if guessedKey=="b"  %} selected{% endif %}>B</option>
+            <select id="key">
+                <option value="none">None</option>
+                <option value="c" {% if guessedKey=="C"  %} selected{% endif %}>C</option>
+                <option value="c#" {% if guessedKey=="C#" %} selected{% endif %}>C#</option>
+                <option value="d" {% if guessedKey=="D"  %} selected{% endif %}>D</option>
+                <option value="d#" {% if guessedKey=="D#" %} selected{% endif %}>D#</option>
+                <option value="e" {% if guessedKey=="E"  %} selected{% endif %}>E</option>
+                <option value="f" {% if guessedKey=="F"  %} selected{% endif %}>F</option>
+                <option value="f#" {% if guessedKey=="F#" %} selected{% endif %}>F#</option>
+                <option value="g" {% if guessedKey=="G"  %} selected{% endif %}>G</option>
+                <option value="g#" {% if guessedKey=="G#" %} selected{% endif %}>G#</option>
+                <option value="a" {% if guessedKey=="A"  %} selected{% endif %}>A</option>
+                <option value="a#" {% if guessedKey=="A#" %} selected{% endif %}>A#</option>
+                <option value="b" {% if guessedKey=="B"  %} selected{% endif %}>B</option>
             </select>
-            <select>
+            <select id="mode">
                 <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                 <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
             </select>
 
             <p>Does it belong to any of this genres?</p>
-            <form>
+            <form id="genres">
                 {% for genre in genres %}
-                <input type="checkbox" name="{{genre}}" value="{{genre}}"> {{genre}}<br>
+                <input type="checkbox" id="{{genre}}" value="{{genre}}"> {{genre}}<br>
                 {% endfor %}
             </form>
 
 
             <p>Any comments?</p>
             <form>
-                <textarea name="comments" cols="40" rows="5"></textarea>
+                <textarea name="comments" id="comments" cols="40" rows="5"></textarea>
             </form>
 
             <p> <input type="checkbox" name="discard" value="discard"> Discard this loop from our dataset? (If it is not
                 a loop) <br></p>
-            <br>
-            <button id="submit-button" style="margin-left:100px; width:150px; height: 100px;">submit</button>
-            <br>
+
         </div>
     </div>
 </body>
