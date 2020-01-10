@@ -57,9 +57,9 @@ def annotator():
     guessedMode = tonality[space_ind + 1:]
     #genres = find_genre_tags(tags)
     audio_file = ()
-    audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')
+    audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')[0]
 
-
+    print(audio_file)
     return render_template("index_new.html", 
                             sound_ids=sound_id,
                             page=page,

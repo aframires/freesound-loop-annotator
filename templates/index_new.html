@@ -16,12 +16,13 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://tonejs.github.io/build/Tone.js"></script>
     <script>
+        var metronome = new Tone.Player("../woodblock.wav").toMaster();
+        var audio = new Tone.Player("{{audio_file}}").toMaster();
         $(function () {
-            var metronome = new Tone.Player("../sounds/woodblock.wav").toMaster();
-            var audio = new Tone.Player('{{audio_file}}').toMaster();
+
             var synth = new Tone.PolySynth(6, Tone.Synth, {
                 oscillator: {
-                    type: "sine"
+                    type: "triangle"
                 }
             }).toMaster();
 
@@ -109,17 +110,20 @@
             }
 
             function startChords() {
-                var chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-                var index = chords.indexOf(('#key').val())
+                var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
+                var index = chords.indexOf($('#key').val())
                 var chordsToUse = []
                 if ($('#mode').val() == "maj") {
-                    chordsToUse = [chords[index], chords[index + 4], chords[index + 7]]
+                    chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 4].toUpperCase()  + "4", chords[index + 7].toUpperCase() + "4"]
                 }
 
                 if ($('#mode').val() == "min") {
-                    chordsToUse = [chords[index], chords[index + 3], chords[index + 7]]
+                    chordsToUse = [chords[index].toUpperCase()  + "4", chords[index + 3].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
                 }
-                synth.triggerAttack(chordToUse)
+
+                console.log(chordsToUse)
+
+                synth.triggerAttack(chordsToUse, undefined, 1)
             }
 
             function stopChords() {
@@ -153,13 +157,19 @@
             </iframe>
             <br>
             <button id="startAudioMetronome">Play Audio and Metronome</button>
+            <br>
             <button id="startAudio">Restart Audio</button>
+            <br>
             <button id="stopAudio">Stop Audio and Metronome</button>
+            <br>
             <button id="startMetronome">Play Metronome</button>
+            <br>
             <button id="stopMetronome">Stop Metronome</button>
+            <br>
             <button id="startChords">Play Chords</button>
+            <br>
             <button id="stopChords">Stop Chords</button>
-
+            <br>
             <button id="submit-button" style="margin-left:100px; width:150px; height: 100px;">submit</button>
             <br>
 
