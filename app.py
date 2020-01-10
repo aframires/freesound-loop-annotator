@@ -1,6 +1,3 @@
-#Imagem esta muito grande
-
-
 from flask import Flask, render_template, request
 import json
 import os
@@ -9,7 +6,7 @@ import glob
 
 app = Flask(__name__, static_url_path='/static')
 
-PATH_TO_FSL10K = "/mnt/f/Code/research/FSL10K"
+PATH_TO_FSL10K = "static/FSL10K"
 PATH_TO_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.json')
 PATH_TO_AC_ANALYSIS = os.path.join(PATH_TO_FSL10K, 'ac_analysis/')
 PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
@@ -18,8 +15,6 @@ PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/original')
 def find_genre_tags(tags):
     return
 
-def find_instruments_tags(tags):
-    return
 
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -35,7 +30,6 @@ def annotator():
 
     # get a chunk of sounds according to the requested page number
     sound_id = sound_ids[(page-1)]
-    print(sound_id)
     metadata = json.load(open(PATH_TO_METADATA + sound_id + '.json', 'rb'))
     loop_name = metadata["name"]
     sound_image = metadata["image"]
@@ -59,7 +53,6 @@ def annotator():
     audio_file = ()
     audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')[0]
 
-    print(audio_file)
     return render_template("index_new.html", 
                             sound_ids=sound_id,
                             page=page,

@@ -16,7 +16,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://tonejs.github.io/build/Tone.js"></script>
     <script>
-        var metronome = new Tone.Player("../woodblock.wav").toMaster();
+        var metronome = new Tone.Player("static/woodblock.wav").toMaster();
         var audio = new Tone.Player("{{audio_file}}").toMaster();
         $(function () {
 
@@ -25,16 +25,12 @@
                     type: "triangle"
                 }
             }).toMaster();
+            
 
             Tone.Transport.bpm.value = $("input[name=bpm]").val();
-            Tone.Buffer.onload = function () {
-                //this will start the player on every quarter note
-                Tone.Transport.setInterval(function (time) {
+            Tone.Transport.scheduleRepeat(function (time) {
                     metronome.start(time);
                 }, "4n");
-                //start the Transport for the events to start
-                Tone.Transport.start();
-            };
 
 
             function get_answers() {
