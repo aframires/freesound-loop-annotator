@@ -18,6 +18,7 @@
     <script>
         var metronome = new Tone.Player("static/woodblock.wav").toMaster();
         var audio = new Tone.Player("{{audio_file}}").toMaster();
+        audio.loop = true
         $(function () {
 
             var synth = new Tone.PolySynth(6, Tone.Synth, {
@@ -92,6 +93,8 @@
 
             function stopAudio() {
                 audio.stop()
+                Tone.Transport.stop();
+
             }
 
             function startMetronome() {
@@ -129,7 +132,7 @@
             $('#submit-button').click(function () { send_answers(); });
             $('#startAudioMetronome').click(function () { startAudioMetronome(); });
             $('#startAudio').click(function () { startAudio(); });
-            $('#stopAudio').click(function () { stopAudio(); });
+            $('#stopAudio').click(function () { stopAudio();});
             $('#startMetronome').click(function () { startMetronome(); });
             $('#stopMetronome').click(function () { stopMetronome(); });
             $('#startChords').click(function () { startChords(); });
@@ -156,7 +159,7 @@
             <br>
             <button id="startAudio">Restart Audio</button>
             <br>
-            <button id="stopAudio">Stop Audio and Metronome</button>
+            <button id="stopAudioMetronome">Stop Audio and Metronome</button>
             <br>
             <button id="startMetronome">Play Metronome</button>
             <br>
@@ -235,15 +238,22 @@
                 <option value="b" {% if guessedKey=="B"  %} selected{% endif %}>B</option>
             </select>
             <select id="mode">
+                <option value="none">None</option>
                 <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                 <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
             </select>
 
             <p>Does it belong to any of this genres?</p>
             <form id="genres">
-                {% for genre in genres %}
-                <input type="checkbox" id="{{genre}}" value="{{genre}}"> {{genre}}<br>
-                {% endfor %}
+                    <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music" value="bass music" > Bass Music<br>
+                    <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %}id="live_sounds" value="live sounds"> Live Sounds<br>
+                    <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %}id="cinematic" value="cinematic"> Cinematic<br>
+                    <input type="checkbox" {% if "global" in genres %} checked {% endif %}id="global" value="global"> Global<br>
+                    <input type="checkbox" {% if "hip hop" in genres %} checked {% endif %}id="hip_hop" value="hip hop"> Hip Hop<br>
+                    <input type="checkbox" {% if "electronic" in genres %} checked {% endif %}id="electronic" value="electronic"> Electronic<br>
+                    <input type="checkbox" {% if "house / techno" in genres %} checked {% endif %}id="house_techno" value="house / techno"> House / Techno<br>
+                    <input type="checkbox" {% if "other dance music" in genres %} checked {% endif %}id="other_dance_music" value="other dance music"> Other Dance Music<br>
+    
             </form>
 
 

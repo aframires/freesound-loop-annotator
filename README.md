@@ -1,10 +1,7 @@
 # percussive-annotator
 
-The Percussive Annotator is a Flask web application that is meant to run locally in your computer.
-It is an annotation tool that was created for building a dataset of isolated single event percussive sounds.
-The dataset is used for training a neural network synthesising percussive sounds.
-
-More information coming soon!
+The Loop Annotator is a Flask web application that is meant to run locally in your computer.
+It is an annotation tool that was created for building a dataset of loops from Freesound.
 
 
 # How to

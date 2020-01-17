@@ -11,6 +11,7 @@ PATH_TO_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.json')
 PATH_TO_AC_ANALYSIS = os.path.join(PATH_TO_FSL10K, 'ac_analysis/')
 PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
 PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/original')
+PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 
 def find_genre_tags(tags):
     return
@@ -45,11 +46,14 @@ def annotator():
     base_name = ac_analysis_filename[ac_analysis_filename.rfind("/"):ac_analysis_filename.find("-hq")]
     ac_analysis_filename =  base_name + "_analysis.json"
     ac_analysis = json.load(open(PATH_TO_AC_ANALYSIS + ac_analysis_filename, 'rb'))
+    genres_file = json.load(open(PATH_TO_GENRE_FILE, 'rb'))
+    genres = genres_file[sound_id]
+    if genres is None:
+        genres=[]
     tonality = ac_analysis["tonality"]
     space_ind = tonality.find(' ')
     guessed_Key = tonality[0:space_ind]
     guessedMode = tonality[space_ind + 1:]
-    #genres = find_genre_tags(tags)
     audio_file = ()
     audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')[0]
 
@@ -64,7 +68,7 @@ def annotator():
                             guessedBPM=guessed_BPM,
                             guessedKey=guessed_Key,
                             guessedMode=guessedMode,
-                            genres=["Pop","Rock","House"])
+                            genres=genres)
 
 
 if __name__ == '__main__':
