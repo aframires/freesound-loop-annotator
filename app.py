@@ -13,8 +13,6 @@ PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
 PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/original')
 PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 
-def find_genre_tags(tags):
-    return
 
 
 
