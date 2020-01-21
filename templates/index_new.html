@@ -15,9 +15,107 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://tonejs.github.io/build/Tone.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+
     <script>
+
+        var chordsToggle = false;
         var metronome = new Tone.Player("static/woodblock.wav").toMaster();
-        var audio = new Tone.Player("{{audio_file}}").toMaster();
+        var channel = new Tone.Channel().toMaster();
+        var audio = new Tone.Player("{{audio_file}}");
+
+        function createWaveform() {
+            var wavesurfer = WaveSurfer.create({
+                container: '#waveform'
+            });
+            wavesurfer.load("{{audio_file}}")
+            wavesurfer.setMute(true)
+
+            function submitBPM() {
+                Tone.Transport.bpm.value = $("input[name=bpm]").val();
+            }
+
+            function startAudioMetronome() {
+                submitBPM()
+                stopAudio()
+                Tone.Transport.start()
+                audio.start()
+                wavesurfer.play(0)
+            }
+
+            function startAudio() {
+                audio.restart()
+                wavesurfer.play(0)
+            }
+
+            function stopAudio() {
+                audio.stop()
+                Tone.Transport.stop();
+                wavesurfer.stop()
+
+            }
+
+            function startMetronome() {
+
+                if (Tone.Transport.state == "stopped") { Tone.Transport.start() }
+                else { Tone.Transport.stop() }
+                submitBPM()
+
+            }
+
+
+
+            function startChords() {
+                var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
+                var index = chords.indexOf($('#key').val())
+                var chordsToUse = []
+                if ($('#mode').val() == "maj") {
+                    chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 4].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
+                }
+
+                if ($('#mode').val() == "min") {
+                    chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 3].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
+                }
+
+                synth.triggerAttack(chordsToUse, undefined, 1)
+            }
+
+            function stopChords() {
+                synth.releaseAll()
+            }
+
+            function volumeUp() {
+                channel.volume.value = channel.volume.value + 1
+
+            }
+
+            function volumeDown() {
+                channel.volume.value = channel.volume.value - 1
+            }
+
+
+            $('#plusAudio').click(function () { volumeUp() });
+            $('#minusAudio').click(function () { volumeDown() });
+            $('#startMetronome').click(function () { startMetronome(); });
+            //$('#stopMetronome').click(function () { stopMetronome(); });
+            $('#startChords').click(function () {
+                if (chordsToggle == false) {
+                    startChords();
+                    chordsToggle = true
+                }
+                else {
+                    stopChords();
+                    chordsToggle = false
+                }
+            });
+
+            $('#startAudioMetronome').click(function () { startAudioMetronome(); });
+            $('#stopAudioMetronome').click(function () { stopAudio(); });
+            $('#startAudio').click(function () { startAudio(); });
+
+        }
+
+        audio.chain(channel)
         audio.loop = true
         $(function () {
 
@@ -26,26 +124,28 @@
                     type: "triangle"
                 }
             }).toMaster();
-            
+
 
             Tone.Transport.bpm.value = $("input[name=bpm]").val();
             Tone.Transport.scheduleRepeat(function (time) {
-                    metronome.start(time);
-                }, "4n");
+                metronome.start(time);
+            }, "4n");
 
 
             function get_answers() {
                 var answers = {};
                 answers.instrumentation = {
-                    drums: $("input[name=drums]").is(":checked"),
+                    percussion: $("input[name=percussion]").is(":checked"),
                     bass: $("input[name=bass]").is(":checked"),
                     chords: $("input[name=chords]").is(":checked"),
                     melody: $("input[name=melody]").is(":checked"),
                     fx: $("input[name=fx]").is(":checked"),
                     vocal: $("input[name=vocal]").is(":checked")
                 }
+                if ($('#other_element').is(":checked")) { answers.instrumentation.other = $('#other_text').val() }
                 answers.bpm = $("input[name=bpm]").val()
                 answers.signature = String($("input[name=metricUpper]").val()) + "/" + String($("input[name=metricLower]").val())
+                answers.well_cut = $("#well_cut").is(":checked");
                 answers.key = $('#key').val()
                 answers.mode = $('#mode').val()
 
@@ -60,6 +160,8 @@
 
                 return answers
             }
+
+
 
             function send_answers() {
                 var answers = get_answers();
@@ -81,62 +183,9 @@
                 });
             }
 
-            function startAudioMetronome() {
-                submitBPM()
-                Tone.Transport.start()
-                audio.start()
-            }
-
-            function startAudio() {
-                audio.restart()
-            }
-
-            function stopAudio() {
-                audio.stop()
-                Tone.Transport.stop();
-
-            }
-
-            function startMetronome() {
-                submitBPM()
-                Tone.Transport.start();
-            }
-            function stopMetronome() {
-                Tone.Transport.stop();
-            }
-            function submitBPM() {
-                Tone.Transport.bpm.value = $("input[name=bpm]").val();
-            }
-
-            function startChords() {
-                var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
-                var index = chords.indexOf($('#key').val())
-                var chordsToUse = []
-                if ($('#mode').val() == "maj") {
-                    chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 4].toUpperCase()  + "4", chords[index + 7].toUpperCase() + "4"]
-                }
-
-                if ($('#mode').val() == "min") {
-                    chordsToUse = [chords[index].toUpperCase()  + "4", chords[index + 3].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
-                }
-
-                console.log(chordsToUse)
-
-                synth.triggerAttack(chordsToUse, undefined, 1)
-            }
-
-            function stopChords() {
-                synth.releaseAll()
-            }
 
             $('#submit-button').click(function () { send_answers(); });
-            $('#startAudioMetronome').click(function () { startAudioMetronome(); });
-            $('#startAudio').click(function () { startAudio(); });
-            $('#stopAudio').click(function () { stopAudio();});
-            $('#startMetronome').click(function () { startMetronome(); });
-            $('#stopMetronome').click(function () { stopMetronome(); });
-            $('#startChords').click(function () { startChords(); });
-            $('#stopChords').click(function () { stopChords(); });
+            //$('#stopChords').click(function () { stopChords(); });
 
         });
     </script>
@@ -144,32 +193,33 @@
 </head>
 
 
-<body>
+<body onload="createWaveform()">
     <div class="row">
         <div class="column">
             <h1>{{loop_name}}</h1>
             <p><b>Description:</b> {{description}}</p>
             <p><b>Tags:</b> {{tags}}</p>
-            <!-- <img stlye="width:90%;" src="{{sound_image}}" alt="{{sound_image}}"> -->
+            <!-- <img stlye="width:90%;" src="{{sound_image}}" alt="{{sound_image}}"> 
             <iframe style="display:inline-block;" frameborder="0" scrolling="no" width="481" height="86"
                 src="https://freesound.org/embed/sound/iframe/{{sound_ids}}/simple/medium/">
-            </iframe>
+            </iframe>-->
+            <div id="waveform"></div>
+            <p>The audio will keep looping, even after the visualisation is finished</p>
             <br>
-            <button id="startAudioMetronome">Play Audio and Metronome</button>
+            <button id="startAudioMetronome">Play Audio and Metronome</button> 
             <br>
-            <button id="startAudio">Restart Audio</button>
+            <button id="startAudio">Restart Audio, Keep Metronome</button>
+            <button id="plusAudio">Audio Volume +</button>
+            <button id="minusAudio">Audio Volume -</button>
             <br>
             <button id="stopAudioMetronome">Stop Audio and Metronome</button>
             <br>
-            <button id="startMetronome">Play Metronome</button>
+            <button id="startMetronome">Start/Stop Metronome</button>
             <br>
-            <button id="stopMetronome">Stop Metronome</button>
+            <button id="startChords">Start/Stop Chords</button>
             <br>
-            <button id="startChords">Play Chords</button>
-            <br>
-            <button id="stopChords">Stop Chords</button>
-            <br>
-            <button id="submit-button" style="margin-left:100px; width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%;">submit</button>
+            <button id="submit-button"
+                style="margin-left:100px; width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%;">submit</button>
             <br>
 
         </div>
@@ -202,12 +252,15 @@
 
             <p>What elements does the loop conatin?</p>
             <form>
-                <input type="checkbox" name="drums" value="drums"> Drums<br>
+                <input type="checkbox" name="percussion" value="percussion"> Percussion<br>
                 <input type="checkbox" name="bass" value="bass"> Bass<br>
                 <input type="checkbox" name="chords" value="chords"> Chords<br>
                 <input type="checkbox" name="melody" value="melody"> Melody<br>
                 <input type="checkbox" name="fx" value="fx"> Sound FX<br>
                 <input type="checkbox" name="vocal" value="vocal"> Vocal<br>
+                <input type="checkbox" id="other_element"
+                    onclick="if (this.checked){ document.getElementById('other_text').removeAttribute('disabled');}" /><textarea
+                    id="other_text" name="other_text" disabled>Other</textarea>
             </form>
 
 
@@ -219,6 +272,11 @@
             <p>What is the time signature?</p>
             <form>
                 <input type="text" name="metricUpper" value="4"> / <input type="text" name="metricLower" value="4">
+            </form>
+
+            <p>Is the loop well cut? (starts in the begginig of the file, finished on the end)</p>
+            <form>
+                <input id="well_cut" type="checkbox" name="wellCut" value="wellCut" checked> Yes<br>
             </form>
 
             <p>What is the key?</p>
@@ -245,15 +303,23 @@
 
             <p>Does it belong to any of this genres?</p>
             <form id="genres">
-                    <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music" value="bass music" > Bass Music<br>
-                    <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %}id="live_sounds" value="live sounds"> Live Sounds<br>
-                    <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %}id="cinematic" value="cinematic"> Cinematic<br>
-                    <input type="checkbox" {% if "global" in genres %} checked {% endif %}id="global" value="global"> Global<br>
-                    <input type="checkbox" {% if "hip hop" in genres %} checked {% endif %}id="hip_hop" value="hip hop"> Hip Hop<br>
-                    <input type="checkbox" {% if "electronic" in genres %} checked {% endif %}id="electronic" value="electronic"> Electronic<br>
-                    <input type="checkbox" {% if "house / techno" in genres %} checked {% endif %}id="house_techno" value="house / techno"> House / Techno<br>
-                    <input type="checkbox" {% if "other dance music" in genres %} checked {% endif %}id="other_dance_music" value="other dance music"> Other Dance Music<br>
-    
+                <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music"
+                    value="bass music"> Bass Music<br>
+                <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %}id="live_sounds"
+                    value="live sounds"> Live Sounds<br>
+                <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %}id="cinematic"
+                    value="cinematic"> Cinematic<br>
+                <input type="checkbox" {% if "global" in genres %} checked {% endif %}id="global" value="global">
+                Global<br>
+                <input type="checkbox" {% if "hip hop" in genres %} checked {% endif %}id="hip_hop" value="hip hop"> Hip
+                Hop<br>
+                <input type="checkbox" {% if "electronic" in genres %} checked {% endif %}id="electronic"
+                    value="electronic"> Electronic<br>
+                <input type="checkbox" {% if "house / techno" in genres %} checked {% endif %}id="house_techno"
+                    value="house / techno"> House / Techno<br>
+                <input type="checkbox" {% if "other dance music" in genres %} checked {% endif %}id="other_dance_music"
+                    value="other dance music"> Other Dance Music<br>
+
             </form>
 
 
