@@ -14,6 +14,8 @@ PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/original')
 PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 
 
+sound_ids = json.load(open(PATH_TO_SOUND_IDS, 'rb'))
+n_pages = len(sound_ids)
 
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -24,8 +26,21 @@ def annotator():
         json.dump(data['answers'], open('annotations/sound-{}.json'.format(data['id']), 'w'))
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
-    page = int(request.args.get('p', 1))
-    sound_ids = json.load(open(PATH_TO_SOUND_IDS, 'rb'))
+    # get latest annoated sound and corresponding page in sound_ids list
+    already_annotated_ids = [unicode(filename.split('-')[1].split('.')[0]) for filename in os.listdir(
+        'annotations') if filename.endswith('.json')]
+    
+    last_annotated_page = 0
+    for sound_id in already_annotated_ids:
+        try:
+            position = sound_ids.index(sound_id)
+            if position + 1 > last_annotated_page:
+                last_annotated_page = position + 1
+        except ValueError:
+            continue
+
+    page = int(request.args.get('p', last_annotated_page + 1))
+    print('Will annotate page:', page)
 
     # get a chunk of sounds according to the requested page number
     sound_id = sound_ids[(page-1)]
@@ -57,8 +72,9 @@ def annotator():
     audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')[0]
 
     return render_template("index_new.html", 
-                            sound_ids=sound_id,
+                            sound_id=sound_id,
                             page=page,
+                            n_pages=n_pages,
                             audio_file=audio_file,
                             loop_name=loop_name,
                             description=description,
@@ -71,4 +87,4 @@ def annotator():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

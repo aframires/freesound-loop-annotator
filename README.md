@@ -6,23 +6,25 @@ It is an annotation tool that was created for building a dataset of loops from F
 
 # How to
 
-Insall dependencies:
+Clone repository, insall dependencies:
 ```shell
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+git clone https://github.com/aframires/freesound-loop-annotator.git
+cd freesound-loop-annotator
+pip install -r requirements.txt  # or create a virtual environment to install them. it only requires flask anyway so you'll probably have it already
 ```
 
-Download the FSL10k.zip file from the Shared Google Drive to the loop-annotator/static folder and unzip.
+Download corresponding zip file with the actual audio files from the Shared Google Drive as per the email instructions. Copy the file to the `static` folder and unzip. Rename the unzipped folder to `FSL10K` (if it is not already named like that). You should now have a directory structure like `static/FSL10K/audio`, `static/FSL10K/ac_analysis`, etc. You can now remove the downloaded `.zip` file.
 
-Start server:
+Now start the server (if you see "internal server error" make sure that the directory structure after adding the dada matches the description above):
 `python app.py`
 
-With GOOGLE CHROME go to:
-`http://localhost:5000/?p=1`
+Use Google Chrome to navigate to this address:
+`http://localhost:5000/`
 
-Annotate and submit your answers.
+You'll be presented with loops to annotate. Fill in all the fields and click "submit". This will save your annotations and automatically **move to the next loop**.
 
-Please check the genre taxonomy provided in [here](https://docs.google.com/document/d/1Rj8mSoDewvnmrTs8HK2yRJ4AgUUf7Ft-JW2xN_bd6P4/edit?usp=sharing) to familiarise yourself on how to annotate genres.
+Reloading `http://localhost:5000/` will present you the last unnanotated loop, therefore you can safely close the browser at any time.
 
-The annotations are stored using JSON files saved inside the `annotations/` directory.
+The annotations are stored using JSON files saved inside the `annotations/` directory. Once all sounds are annotated, zip the annotations directory and please send the file as per the email instructions.
+
+Before annotating, please check the genre taxonomy provided in [here](https://docs.google.com/document/d/1Rj8mSoDewvnmrTs8HK2yRJ4AgUUf7Ft-JW2xN_bd6P4/edit?usp=sharing) to familiarise yourself on how to annotate genres.
