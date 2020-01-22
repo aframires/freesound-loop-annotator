@@ -45,8 +45,9 @@ def annotator():
     ac_analysis_filename =  base_name + "_analysis.json"
     ac_analysis = json.load(open(PATH_TO_AC_ANALYSIS + ac_analysis_filename, 'rb'))
     genres_file = json.load(open(PATH_TO_GENRE_FILE, 'rb'))
-    genres = genres_file[sound_id]
-    if genres is None:
+    if sound_id in genres_file:
+        genres = genres_file[sound_id]
+    else:
         genres=[]
     tonality = ac_analysis["tonality"]
     space_ind = tonality.find(' ')
