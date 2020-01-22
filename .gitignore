@@ -1,5 +1,8 @@
 annotations/*
 !annotations/.keep
+static/FSL10K
+
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

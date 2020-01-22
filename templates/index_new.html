@@ -168,7 +168,7 @@
                 var data = {
                     answers: answers,
                     page: '{{page}}',
-                    id: '{{sound_ids}}'
+                    id: '{{sound_id}}'
                 }
                 $.ajax({
                     url: '/',
@@ -196,12 +196,12 @@
 <body onload="createWaveform()">
     <div class="row">
         <div class="column">
-            <h1>{{loop_name}}</h1>
+            <h1>{{sound_id}} - {{loop_name}} [{{page}}/{{n_pages}}]</h1>
             <p><b>Description:</b> {{description}}</p>
             <p><b>Tags:</b> {{tags}}</p>
             <!-- <img stlye="width:90%;" src="{{sound_image}}" alt="{{sound_image}}"> -->
             <iframe style="display:inline-block;" frameborder="0" scrolling="no" width="481" height="86"
-                src="https://freesound.org/embed/sound/iframe/{{sound_ids}}/simple/medium/">
+                src="https://freesound.org/embed/sound/iframe/{{sound_id}}/simple/medium/">
             </iframe>
             <div id="waveform"></div>
             <p>The audio will keep looping, even after the visualisation is finished</p>
