@@ -5,20 +5,8 @@ import os
 import glob
 import errno
 
-
 app = Flask(__name__, static_url_path='/fslannotator/static', static_folder='/app/static/')
 auth = HTTPBasicAuth()
-
-users = {
-    "aframires": "hello",
-    "ffont": "hello2",
-}
-
-@auth.verify_password
-def verify_password(username, password):
-    if username in users:
-        return users.get(username) == password
-    return False
 
 PATH_TO_FSL10K = "/app/static/FSL10K"
 #PATH_TO_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.json')
@@ -28,14 +16,19 @@ PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
 PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/wav')
 PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 PATH_TO_ANNOTATIONS =  os.path.join(PATH_TO_FSL10K, 'annotations/')
+PATH_TO_USERS_FILE = os.path.join(PATH_TO_FSL10K, 'users.json')
 
+users =  json.load(open(PATH_TO_USERS_FILE, 'rb')) 
 #sound_ids = json.load(open(PATH_TO_SOUND_IDS, 'rb'))
 sound_id_user = json.load(open(PATH_TO_SOUND_IDS_PER_USER, 'rb'))
 
+@auth.verify_password
+def verify_password(username, password):
+    if username in users:
+        return users.get(username) == password
+    return False
+
 def mkdir_p(path):
-    """
-    TODO: document this function
-    """
     try:
         os.makedirs(path)
     except OSError as exc:
