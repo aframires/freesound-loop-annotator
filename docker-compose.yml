@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    command: flask run --host=0.0.0.0
+    environment:
+      - FLASK_ENV=development
+    ports:
+      - "5000:5000"
+    stop_signal: SIGINT
+    volumes:
+      - .:/app
+      - /Users/ffont/Data/FSL10K0:/app/static/FSL10K
