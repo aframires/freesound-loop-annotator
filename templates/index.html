@@ -20,7 +20,7 @@
     <script>
 
         var chordsToggle = false;
-        var metronome = new Tone.Player("static/woodblock.wav").toMaster();
+        var metronome = new Tone.Player("{{metronome_sound_url}}").toMaster();
         var channel = new Tone.Channel().toMaster();
         var audio = new Tone.Player("{{audio_file}}");
 

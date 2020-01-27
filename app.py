@@ -17,6 +17,7 @@ PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/wav')
 PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 PATH_TO_ANNOTATIONS =  os.path.join(PATH_TO_FSL10K, 'annotations/')
 PATH_TO_USERS_FILE = os.path.join(PATH_TO_FSL10K, 'users.json')
+METRONOME_SOUND_URL = '/fslannotator' + PATH_TO_FSL10K + '/woodblock.wav'
 
 users =  json.load(open(PATH_TO_USERS_FILE, 'rb')) 
 #sound_ids = json.load(open(PATH_TO_SOUND_IDS, 'rb'))
@@ -99,13 +100,14 @@ def annotator():
     guessedMode = tonality[space_ind + 1:]
     audio_file = ()
     audio_file = glob.glob(PATH_TO_AUDIO_FILES + base_name + '*')[0]
-    audio_file = audio_file.replace('/app', '/fslannotator')
+    url_to_audio_file = '/fslannotator' + audio_file
 
     return render_template("index.html", 
                             sound_id=sound_id,
                             page=page,
                             n_pages=n_pages,
-                            audio_file=audio_file,
+                            audio_file=url_to_audio_file,
+                            metronome_sound_url=METRONOME_SOUND_URL,
                             loop_name=loop_name,
                             description=description,
                             tags=tags_to_display,
