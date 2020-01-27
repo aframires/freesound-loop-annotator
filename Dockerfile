@@ -1,9 +1,9 @@
 FROM python:3.7
 
-RUN mkdir /app
-ADD requirements.txt /app
+RUN mkdir /code
+ADD requirements.txt /code
 
-WORKDIR /app
+WORKDIR /code
 RUN pip install --no-cache -r requirements.txt
 
-ADD . /app
+ADD . /code

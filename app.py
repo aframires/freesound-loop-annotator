@@ -5,10 +5,10 @@ import os
 import glob
 import errno
 
-app = Flask(__name__, static_url_path='/fslannotator/static', static_folder='/app/static/')
+app = Flask(__name__, static_url_path='/fslannotator/static', static_folder='/static/')
 auth = HTTPBasicAuth()
 
-PATH_TO_FSL10K = "/app/static/FSL10K"
+PATH_TO_FSL10K = "/static/FSL10K"
 #PATH_TO_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.json')
 PATH_TO_SOUND_IDS_PER_USER = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list_username.json')
 PATH_TO_AC_ANALYSIS = os.path.join(PATH_TO_FSL10K, 'ac_analysis/')

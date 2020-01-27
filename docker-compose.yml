@@ -10,5 +10,5 @@ services:
       - "5000:5000"
     stop_signal: SIGINT
     volumes:
-      - .:/app
-      - /Users/ffont/Data/FSL10K0:/app/static/FSL10K
+      - .:/code
+      - /Users/ffont/Data/FSL10K0:/static/FSL10K
