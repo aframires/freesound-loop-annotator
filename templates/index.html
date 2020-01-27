@@ -30,6 +30,12 @@
             });
             wavesurfer.load("{{audio_file}}")
             wavesurfer.setMute(true)
+            
+            var synth = new Tone.PolySynth(6, Tone.Synth, {
+                oscillator: {
+                    type: "triangle"
+                }
+            }).toMaster();
 
             function submitBPM() {
                 Tone.Transport.bpm.value = $("input[name=bpm]").val();
@@ -118,13 +124,6 @@
         audio.chain(channel)
         audio.loop = true
         $(function () {
-
-            var synth = new Tone.PolySynth(6, Tone.Synth, {
-                oscillator: {
-                    type: "triangle"
-                }
-            }).toMaster();
-
 
             Tone.Transport.bpm.value = $("input[name=bpm]").val();
             Tone.Transport.scheduleRepeat(function (time) {
