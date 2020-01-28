@@ -31,6 +31,33 @@
             color: gray;
         }
 
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted gray; /* If you want dots under the hoverable text */
+        }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            font-size: 80%;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
     </style>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
@@ -352,7 +379,19 @@
            Does it belong to any of this genres?
                 <div id="genres">
                     <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music"
-                        value="bass music"> <label for="bass_music">Bass Music</label> <span class="graytext">(example, example)</span><br>
+                        value="bass music"> 
+                        <label for="bass_music">Bass Music</label> 
+                        <span class="graytext">(example1, example2, example3, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                subgenre1<br>
+                                subgenre2<br>
+                                subgenre3<br>
+                                subgenre4
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+                    
                     <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %}id="live_sounds"
                         value="live sounds"> <label for="live_sounds">Live Sounds</label><br>
                     <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %}id="cinematic"
