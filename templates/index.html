@@ -324,12 +324,12 @@
 
             <p>What elements does the loop conatin?
                 <br>
-                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(example, example)</span> <br>
-                <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label><br>
-                <input type="checkbox" id="chords_id" name="chords" value="chords"> <label for="chords_id">Chords</label><br>
-                <input type="checkbox" id="melody_id" name="melody" value="melody"> <label for="melody_id">Melody</label><br>
-                <input type="checkbox" id="fx_id" name="fx" value="fx"> <label for="fx_id">Sound FX</label><br>
-                <input type="checkbox" id="vocal_id" name="vocal" value="vocal"> <label for="vocal_id">Vocal</label><br>
+                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(Drums, congas, cymbals)</span> <br>
+                <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label> <span class="graytext">(Digital bass, Fingered bass, 808)</span> <br>
+                <input type="checkbox" id="chords_id" name="chords" value="chords"> <label for="chords_id">Chords</label> <span class="graytext">(Piano chords, Guitar chords)</span> <br>
+                <input type="checkbox" id="melody_id" name="melody" value="melody"> <label for="melody_id">Melody</label> <span class="graytext">(Lead instrument playing a melody)</span> <br> 
+                <input type="checkbox" id="fx_id" name="fx" value="fx"> <label for="fx_id">Sound FX</label> <span class="graytext">(Risers, Cinematic sounds, Foley)</span> <br>
+                <input type="checkbox" id="vocal_id" name="vocal" value="vocal"> <label for="vocal_id">Vocal</label> <span class="graytext">(Singing voice, Spoken Word, Vocoder)</span> <br>
                 <input type="checkbox" id="other_element"
                     onclick="if (this.checked){ document.getElementById('other_text').removeAttribute('disabled');}" /><textarea
                     id="other_text" name="other_text" disabled>Other</textarea>
@@ -377,35 +377,177 @@
             </p>
 
            Does it belong to any of this genres?
+           <span class="graytext">Would it be easy to use this loop to create music in this genre?</span>
                 <div id="genres">
                     <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music"
                         value="bass music"> 
                         <label for="bass_music">Bass Music</label> 
-                        <span class="graytext">(example1, example2, example3, 
+                        <span class="graytext">(Dubstep, Drum & Bass, Jungle, 
                             <span class="tooltip">more...<span class="tooltiptext">
-                                subgenre1<br>
-                                subgenre2<br>
-                                subgenre3<br>
-                                subgenre4
+                                Bass House<br>
+                                Complextro<br>
+                                Future Bass<br>
+                                Grime<br>
+                                Moombah<br>
+                                Drumstep<br>
+                                Breakbeat<br>
+                                Tearout Dubstep<br>
+                                Leftfield Bass<br>
+                                Breaks<br>
+                                Neurofunk<br>
+                                Footwork
                             </span>
                         </span>)
                     </span>
                     <br>
                     
-                    <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %}id="live_sounds"
-                        value="live sounds"> <label for="live_sounds">Live Sounds</label><br>
-                    <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %}id="cinematic"
-                        value="cinematic"> <label for="cinematic">Cinematic</label><br>
-                    <input type="checkbox" {% if "global" in genres %} checked {% endif %}id="global" value="global">
-                    <label for="global">Global</label><br>
-                    <input type="checkbox" {% if "hip hop" in genres %} checked {% endif %}id="hip_hop" value="hip hop"> <label for="hip_hop">Hip
-                    Hop</label><br>
-                    <input type="checkbox" {% if "electronic" in genres %} checked {% endif %}id="electronic"
-                        value="electronic"> <label for="electronic">Electronic</label><br>
-                    <input type="checkbox" {% if "house / techno" in genres %} checked {% endif %}id="house_techno"
-                        value="house / techno"> <label for="house_techno">House / Techno</label><br>
-                    <input type="checkbox" {% if "other dance music" in genres %} checked {% endif %}id="other_dance_music"
-                        value="other dance music"> <label for="other_dance_music">Other Dance Music</label><br>
+                    <input type="checkbox" {% if "live sounds" in genres %} checked {% endif %} id="live_sounds"
+                        value="live sounds"> 
+                        <label for="live_sounds">Live Sounds</label>
+                        <span class="graytext">(Rock, Jazz, Disco, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                Indie Dance<br>
+                                Blues<br>
+                                Heavy Metal<br>
+                                Funk<br>
+                                Folk<br>
+                                Country<br>
+                                Nu Disco<br>
+                                Soul<br>
+                                R&B<br>
+                                Gospel<br>
+                                Neo Soul
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+                    
+                    <input type="checkbox" {% if "cinematic" in genres %} checked {% endif %} id="cinematic"
+                        value="cinematic"> 
+                        <label for="cinematic">Cinematic</label>
+                        <span class="graytext">(Sound FX, Filmscore, Sci-Fi, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                Soundtrack<br>
+                                Action<br>
+                                Horror<br>
+                                Game
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+
+                    <input type="checkbox" {% if "global" in genres %} checked {% endif %} id="global" 
+                        value="global">
+                        <label for="global">Global</label>
+                        <span class="graytext">(Reggae, Dancehall, Indian Music, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                African Music<br>
+                                Asian Music<br>
+                                South American Music<br>
+                                Dub<br>
+                                Reggae<br>
+                                Latin<br>
+                                Middle Eastern Music<br>
+                                Reggae<br>
+                                Afropop<br>
+                                Brazilian Music<br>
+                                South Asian Music<br>
+                                Caribbean Music
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+
+                    <input type="checkbox" {% if "hip hop" in genres %} checked {% endif %} id="hip_hop" 
+                        value="hip hop"> 
+                        <label for="hip_hop">Hip Hop</label>
+                        <span class="graytext">(Trap, Boom Bap, Lofi Hip Hop, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                East Coast Hip Hop<br>
+                                Experimental Hip Hop<br>
+                                Southern Hip Hop<br>
+                                West Coast Hip Hop
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+
+                    <input type="checkbox" {% if "electronic" in genres %} checked {% endif %} id="electronic"
+                        value="electronic"> 
+                        <label for="electronic">Electronic</label>
+                        <span class="graytext">(Ambient, Experimental, Chill Out, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                Bit Music<br>
+                                Broken Beat<br>
+                                Chill Out<br>
+                                Downtempo<br>
+                                Drone<br>
+                                Electronica<br>
+                                Glitch<br>
+                                IDM<br>
+                                Indie Dance<br>
+                                Industrial<br>
+                                Lo-Fi<br>
+                                Synth Pop<br>
+                                Trip Hop<br>
+                                Synthwave<br>
+                                Chiptune
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+
+                    <input type="checkbox" {% if "house / techno" in genres %} checked {% endif %} id="house_techno"
+                        value="house / techno"> 
+                        <label for="house_techno">House / Techno</label>
+                        <span class="graytext">(Deep House, Electro, Tech House, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                House<br>
+                                Techno<br>
+                                Acid House<br>
+                                Bass House<br>
+                                Bass Line<br>
+                                G House<br>
+                                Nu Disco<br>
+                                Progressive House<br>
+                                Tech House<br>
+                                Tribal House<br>
+                                UK Garage<br>
+                                Classic House<br>
+                                Electro House<br>
+                                Future House<br>
+                                Funky House<br>
+                                Garage<br>
+                                Progressive House<br>
+                                Tech House<br>
+                                Tribal House<br>
+                                Dub Techno<br>
+                                Hardcore<br>
+                                Minimal<br>
+                                Melodic Techno<br>
+                                Hardstyle<br>
+                                Hard Techno<br>
+                                Tech House<br>
+                                Tropical House
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
+
+                    <input type="checkbox" {% if "other dance music" in genres %} checked {% endif %} id="other_dance_music"
+                        value="other dance music"> 
+                        <label for="other_dance_music">Other Dance Music</label>
+                        <span class="graytext">(EDM, Psy Trance, Hardstyle, 
+                            <span class="tooltip">more...<span class="tooltiptext">
+                                Complextro<br>
+                                Dance<br>
+                                Melbourne Dance<br>
+                                Psybient<br>
+                                Trance
+                            </span>
+                        </span>)
+                    </span>
+                    <br>
                 </div>
             
 
