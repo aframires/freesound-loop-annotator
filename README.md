@@ -1,4 +1,4 @@
-# percussive-annotator
+# Freesound Loop Annotator
 
 The Loop Annotator is a Flask web application that is meant to run locally in your computer.
 It is an annotation tool that was created for building a dataset of loops from Freesound.
