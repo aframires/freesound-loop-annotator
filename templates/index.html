@@ -90,6 +90,9 @@
                     type: "triangle"
                 }
             }).toMaster();
+
+            synth.volume = -3
+
             
             $('#plusAudio').click(function () { volumeUp() });
             $('#minusAudio').click(function () { volumeDown() });
@@ -169,14 +172,19 @@
 
         function startChords() {
             var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
+            var chordsForSynth = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5"]
             var index = chords.indexOf($('#key').val())
             var chordsToUse = []
             if ($('#mode').val() == "maj") {
-                chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 4].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
+                chordsToUse = [chordsForSynth[index], chordsForSynth[index + 4], chordsForSynth[index + 7]]
             }
 
             if ($('#mode').val() == "min") {
-                chordsToUse = [chords[index].toUpperCase() + "4", chords[index + 3].toUpperCase() + "4", chords[index + 7].toUpperCase() + "4"]
+                chordsToUse = [chordsForSynth[index], chordsForSynth[index + 3], chordsForSynth[index + 7]]
+            }
+
+            if ($('#mode').val() == "none"){
+                chordsToUse = [chordsForSynth[index]]
             }
 
             synth.triggerAttack(chordsToUse, undefined, 1)
@@ -216,11 +224,19 @@
                     vocal: $("input[name=vocal]").is(":checked")
                 }
                 if ($('#other_element').is(":checked")) { answers.instrumentation.other = $('#other_text').val() }
-                answers.bpm = $("input[name=bpm]").val()
+                if ($('#defined_tempo').is(":checked")){answers.bpm = $("input[name=bpm]").val()}
+                else{answers.bpm = "none"}
                 answers.signature = String($("input[name=metricUpper]").val()) + "/" + String($("input[name=metricLower]").val())
                 answers.well_cut = $("#well_cut").is(":checked");
-                answers.key = $('#key').val()
-                answers.mode = $('#mode').val()
+                if($('#defined_key').is(":checked")){
+                    answers.key = $('#key').val()
+                    answers.mode = $('#mode').val()
+                }
+                else{
+                    answers.key = "none"
+                    answers.mode = "none"
+                }
+
 
 
                 answers.genres = []
@@ -237,6 +253,11 @@
 
 
             function send_answers() {
+                var result = confirm("you sure?")
+                if (result===false){
+                    return
+                }
+
                 var answers = get_answers();
                 var data = {
                     answers: answers,
@@ -341,7 +362,10 @@
 
             <p>What is the BPM?
                 <br>
-                <input type="text" name="bpm" value="{{guessedBPM}}" onchange="restartMetronome();">
+                <input type="checkbox" id="defined_tempo" checked
+                onclick="if (this.checked === false){ document.getElementById('bpm').disabled = true;} 
+                        else{document.getElementById('bpm').disabled = false;}"> <label for="defined_tempo"> Loop has a well defined tempo</label>
+                <input type="text" name="bpm" id="bpm" value="{{guessedBPM}}" onchange="restartMetronome();">
             </p>
             
             <p>What is the time signature?
@@ -358,6 +382,10 @@
                 <br>
                 <span class="graytext">Select a key that <i>sounds good</i> with the loop (or select None)</span>
                 <br>
+                <input type="checkbox" id="defined_key" checked
+                onclick="if (this.checked === false){ document.getElementById('key').disabled = true; document.getElementById('mode').disabled = true;}
+                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_tempo"> Loop has a key</label>
+   
                 <select id="key" onchange="if (chordsToggle === true){stopChords();startChords();};">
                     <option value="none">None</option>
                     <option value="c" {% if guessedKey=="C"  %} selected{% endif %}>C</option>
