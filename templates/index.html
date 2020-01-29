@@ -246,14 +246,14 @@
 
                 answers.comments = $("textarea#comments").val()
                 answers.discard = $("input[name=discard]").is(":checked")
-
+                console.log(answers)
                 return answers
             }
 
 
 
             function send_answers() {
-                var result = confirm("you sure?")
+                var result = confirm("Are you sure?")
                 if (result===false){
                     return
                 }
@@ -365,6 +365,7 @@
                 <input type="checkbox" id="defined_tempo" checked
                 onclick="if (this.checked === false){ document.getElementById('bpm').disabled = true;} 
                         else{document.getElementById('bpm').disabled = false;}"> <label for="defined_tempo"> Loop has a well defined tempo</label>
+                <br>                
                 <input type="text" name="bpm" id="bpm" value="{{guessedBPM}}" onchange="restartMetronome();">
             </p>
             
@@ -384,8 +385,8 @@
                 <br>
                 <input type="checkbox" id="defined_key" checked
                 onclick="if (this.checked === false){ document.getElementById('key').disabled = true; document.getElementById('mode').disabled = true;}
-                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_tempo"> Loop has a key</label>
-   
+                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_key"> Loop has a key</label>
+                <br>               
                 <select id="key" onchange="if (chordsToggle === true){stopChords();startChords();};">
                     <option value="none">None</option>
                     <option value="c" {% if guessedKey=="C"  %} selected{% endif %}>C</option>
