@@ -364,7 +364,7 @@
                 <br>
                 <input type="checkbox" id="defined_tempo" checked
                 onclick="if (this.checked === false){ document.getElementById('bpm').disabled = true;} 
-                        else{document.getElementById('bpm').disabled = false;}"> <label for="defined_tempo"> Loop has a well defined tempo</label>
+                        else{document.getElementById('bpm').disabled = false;}"> <label for="defined_tempo"> The loop has a clear and steady tempo</label>
                 <br>                
                 <input type="text" name="bpm" id="bpm" value="{{guessedBPM}}" onchange="restartMetronome();">
             </p>
@@ -374,21 +374,21 @@
                 <input type="text" name="metricUpper" value="4"> / <input type="text" name="metricLower" value="4">
             </p>
 
-            <p>Is the loop well cut? (starts in the begginig of the file, finished on the end)
+            <p>Is the loop well cut? <span class="graytext">(i.e. the loop starts in the begginig of the file, finishes at the end)</span>
                 <br>
                 <input id="well_cut" type="checkbox" name="wellCut" value="wellCut" checked> <label for="well_cut">Yes</label>
             </p>
 
             <p>What is the key?
-                <br>
-                <span class="graytext">Select a key that <i>sounds good</i> with the loop (or select None)</span>
+                <span class="graytext">(if loop has tonal content, select a key that <i>sounds good</i> with the loop)</span>
                 <br>
                 <input type="checkbox" id="defined_key" checked
                 onclick="if (this.checked === false){ document.getElementById('key').disabled = true; document.getElementById('mode').disabled = true;}
-                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_key"> Loop has a key</label>
+                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_key"> The loop has tonal content</label>
                 <br>               
                 <select id="key" onchange="if (chordsToggle === true){stopChords();startChords();};">
                     <option value="none">None</option>
+                    <option value="unknown">Unknown</option>
                     <option value="c" {% if guessedKey=="C"  %} selected{% endif %}>C</option>
                     <option value="c#" {% if guessedKey=="C#" %} selected{% endif %}>C#</option>
                     <option value="d" {% if guessedKey=="D"  %} selected{% endif %}>D</option>
@@ -404,13 +404,14 @@
                 </select>
                 <select id="mode" onchange="if (chordsToggle === true){stopChords();startChords();};">
                     <option value="none">None</option>
+                    <option value="unknown">Unknown</option>
                     <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                     <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
                 </select>
             </p>
 
-           Does it belong to any of this genres?
-           <span class="graytext">Would it be easy to use this loop to create music in this genre?</span>
+           Does it belong to any of these genres?
+           <span class="graytext">(would the loop be useful for creating music in this genre?)</span>
                 <div id="genres">
                     <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music"
                         value="bass music"> 
