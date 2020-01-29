@@ -3,7 +3,7 @@
 The Loop Annotator is a Flask web application that is meant to run locally in your computer.
 It is an annotation tool that was created for building a dataset of loops from Freesound.
 
-This app is hosted online and accessible at https://mtg.upf.edu/fslannotator
+This app is hosted online and accessible at https://mtg.upf.edu/fslannotator/
 
 
 # How to run locally
