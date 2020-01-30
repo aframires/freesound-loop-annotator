@@ -431,11 +431,11 @@
             </p>
 
             <p>What is the key?
-                <span class="graytext">(if loop has tonal content, select a key that <i>sounds good</i> with the loop)</span>
+                <span class="graytext">(if loop has prominent tonal content, select a key that <i>sounds good</i> with the loop)</span>
                 <br>
                 <input type="checkbox" id="defined_key" checked
                 onclick="if (this.checked === false){ document.getElementById('key').disabled = true; document.getElementById('mode').disabled = true;}
-                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_key"> The loop has tonal content</label>
+                        else{ document.getElementById('key').disabled = false; document.getElementById('mode').disabled = false;}"> <label for="defined_key"> The loop has prominent tonal content</label>
                 <br>               
                 <select id="key" onchange="if (chordsToggle === true){stopChords();startChords();};">
                     <option value="none">None</option>
