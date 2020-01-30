@@ -85,14 +85,19 @@
             wavesurfer.load("{{audio_file}}")
             wavesurfer.setMute(true)
             
-            synth = new Tone.PolySynth(6, Tone.Synth, {
+            synth = new Tone.PolySynth(10, Tone.Synth, {
                 oscillator: {
                     type: "triangle"
+                },
+                envelope: {
+                    attack: 0.01,
+                    decay: 0.01,
+                    sustain: 0.1,
+                    release: 0.001
                 }
             }).toMaster();
 
-            synth.volume = -3
-
+            //synth.volume = -40
             
             $('#plusAudio').click(function () { volumeUp() });
             $('#minusAudio').click(function () { volumeDown() });
@@ -102,20 +107,62 @@
             //$('#stopMetronome').click(function () { stopMetronome(); });
             $('#toggleChords').click(function () {
                 if (chordsToggle == false) {
-                    startChords();
-                    chordsToggle = true
-                    $("#toggleChords").html("Stop chords");
+                    startChords();  
                 }
                 else {
-                    stopChords();
-                    chordsToggle = false
-                    $("#toggleChords").html("Start chords");
+                    stopChords(); 
                 }
             });
 
             $('#startAudioMetronome').click(function () { startAudioMetronome(); });
             $('#stopAudioMetronome').click(function () { stopAudio(); });
             $('#startAudio').click(function () { startAudio(); });
+
+            // Bind key actions to set and play chords
+            $("#key").keydown(function(e){
+                e.preventDefault();
+
+                if (e.originalEvent.repeat){
+                    return;  // Avoid re-triggering chords if key remains pressed
+                }
+
+                if (e.code=="KeyA"){$('#key').val('c'); stopChords(); startChords();}  // C
+                else if (e.code=="KeyW"){$('#key').val('c#'); stopChords(); startChords();}  // C#
+                else if (e.code=="KeyS"){$('#key').val('d'); stopChords(); startChords();}  // D
+                else if (e.code=="KeyE"){$('#key').val('d#'); stopChords(); startChords();}  // D#
+                else if (e.code=="KeyD"){$('#key').val('e'); stopChords(); startChords();}  // E
+                else if (e.code=="KeyF"){$('#key').val('f'); stopChords(); startChords();}  // F
+                else if (e.code=="KeyT"){$('#key').val('f#'); stopChords(); startChords();}  // F#
+                else if (e.code=="KeyG"){$('#key').val('g'); stopChords(); startChords();}  // G
+                else if (e.code=="KeyY"){$('#key').val('a'); stopChords(); startChords();} // G#
+                else if (e.code=="KeyH"){$('#key').val('a'); stopChords(); startChords();}  // A
+                else if (e.code=="KeyU"){$('#key').val('a#'); stopChords(); startChords();}  // A#
+                else if (e.code=="KeyJ"){$('#key').val('b'); stopChords(); startChords();}  // B
+                else if (e.code=="KeyM"){
+                    // toggle major minor none
+                    var modeValues = ['none', 'unknown', 'maj', 'min']
+                    var currentMode = $("#mode").val()
+                    var nextMode = (modeValues.indexOf(currentMode) + 1) % 4
+                    $("#mode").val(modeValues[nextMode]);
+                    stopChords(); startChords();
+                }
+            });
+
+            $("#key").keyup(function(e){
+                e.preventDefault();
+                if (e.code=="KeyA"){stopChords();}  // C
+                else if (e.code=="KeyW"){stopChords();}  // C#
+                else if (e.code=="KeyS"){stopChords();}  // D
+                else if (e.code=="KeyE"){stopChords();}  // D#
+                else if (e.code=="KeyD"){stopChords();}  // E
+                else if (e.code=="KeyF"){stopChords();}  // F
+                else if (e.code=="KeyT"){stopChords();}  // F#
+                else if (e.code=="KeyG"){stopChords();}  // G
+                else if (e.code=="KeyY"){stopChords();} // G#
+                else if (e.code=="KeyH"){stopChords();}  // A
+                else if (e.code=="KeyU"){stopChords();}  // A#
+                else if (e.code=="KeyJ"){stopChords();}  // B
+            });
         }
 
         function submitBPM() {
@@ -171,9 +218,15 @@
         }
 
         function startChords() {
+            chordsToggle = true
+            $("#toggleChords").html("Stop chords");
+
             var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
             var chordsForSynth = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5"]
             var index = chords.indexOf($('#key').val())
+            if (index == -1){
+                return;
+            }
             var chordsToUse = []
             if ($('#mode').val() == "maj") {
                 chordsToUse = [chordsForSynth[index], chordsForSynth[index + 4], chordsForSynth[index + 7]]
@@ -183,7 +236,7 @@
                 chordsToUse = [chordsForSynth[index], chordsForSynth[index + 3], chordsForSynth[index + 7]]
             }
 
-            if ($('#mode').val() == "none"){
+            if (($('#mode').val() == "none") || ($('#mode').val() == "unknown")){
                 chordsToUse = [chordsForSynth[index]]
             }
 
@@ -191,6 +244,8 @@
         }
 
         function stopChords() {
+            chordsToggle = false
+            $("#toggleChords").html("Start chords");
             synth.releaseAll()
         }
 
@@ -237,8 +292,6 @@
                     answers.mode = "none"
                 }
 
-
-
                 answers.genres = []
                 $("#genres input:checkbox:checked").each(function () {
                     answers.genres.push($(this).val())
@@ -249,8 +302,6 @@
                 console.log(answers)
                 return answers
             }
-
-
 
             function send_answers() {
                 var result = confirm("Are you sure?")
@@ -408,6 +459,8 @@
                     <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                     <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
                 </select>
+                <br>
+                <span class="graytext" style="font-size: 80%;"><b>TIP:</b> if you double click on the key root dropdown (to give it focus), then you can use key 'A', 'W', 'S'... so change root notes and quickly play chords without pressing the "start chords" button on the left. Also use key 'M' to cycle through scala options. </span>
             </p>
 
            Does it belong to any of these genres?
