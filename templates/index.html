@@ -44,8 +44,8 @@
             font-size: 80%;
             background-color: black;
             color: #fff;
-            text-align: center;
-            padding: 5px 0;
+            text-align: left;
+            padding: 5px;
             border-radius: 6px;
             
             /* Position the tooltip text - see examples below! */
@@ -56,6 +56,10 @@
         /* Show the tooltip text when you mouse over the tooltip container */
         .tooltip:hover .tooltiptext {
             visibility: visible;
+        }
+
+        .tooltip:hover {
+            cursor: pointer;
         }
 
         button {
@@ -372,7 +376,7 @@
 
         </div>
 
-        <div class="column" style="background-color: #F5F5F5; padding-left: 20px;">
+        <span class="column" style="background-color: #F5F5F5; padding-left: 20px;">
             <!--
             <p>Is the loop harmonic and/or percussive:</p>
             <form>
@@ -399,6 +403,9 @@
 -->
 
             <p>What elements does the loop conatin?
+                <span class="tooltip">help...<span class="tooltiptext" style="width: 200px;">
+                    - You can select multiple elements
+                </span></span>
                 <br>
                 <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(e.g. drums, congas, cymbals)</span> <br>
                 <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label> <span class="graytext">(e.g. digital bass, fingered bass, 808)</span> <br>
@@ -412,6 +419,10 @@
             </p>
 
             <p>What is the BPM?
+                <span class="tooltip">help...<span class="tooltiptext" style="width: 300px;">
+                    - If a loop has changing tempo, you can put here the initial tempo and add a note in the comment section
+                    <br><br>- If the BPM does not match and it is not easy to find the correct one, add a note in the comments section and discard the loop.
+                </span></span>
                 <br>
                 <input type="checkbox" id="defined_tempo" checked
                 onclick="if (this.checked === false){ document.getElementById('bpm').disabled = true;} 
@@ -425,15 +436,23 @@
                 <input type="text" name="metricUpper" value="4"> / <input type="text" name="metricLower" value="4">
             </p>
 
-            <p>Is the loop well cut? <span class="graytext">
-                <br>
-                (i.e. the loop starts in the begginig of the file, finishes at the end and whenever it loops, the metronome still is on the correct position)</span>
+            <p>Is the loop well cut?
+                <span class="tooltip">help...<span class="tooltiptext" style="width: 300px;">
+                    - A loop is well cut if whenever it loops the metronome still sounds in the correct position
+                    <br><br>- In some cases the metonome goes out of sync after several repetitions. If metronome plays well during the first ~4 repetitions, consider the loop to be well cut.
+                    <br><br>- Some loops are cut in a way that there is 1 last bar of silence to account for, e.g, reverb and delay tails. This shold be considered well cut (if the metornome matches when looping).
+                </span></span>
                 <br>
                 <input id="well_cut" type="checkbox" name="wellCut" value="wellCut" checked> <label for="well_cut">Yes</label>
             </p>
 
             <p>What is the key?
-                <span class="graytext">(if loop has prominent tonal content, select a key that <i>sounds good</i> with the loop)</span>
+                <span class="tooltip">help...<span class="tooltiptext" style="width: 300px;">
+                    - A loop has "prominent tonal content" if it is easy to "sing" along it or easily find a meaningful root note
+                    <br><br>- If the loop is percussive but has a pitched kick, don't consider it "prominent tonal content"
+                    <br><br>- If loop has prominent tonal content, select a key that "sounds good" with the loop
+                    <br><br>- If loop clearly has prominent tonal content but still it is hard to determine key, set it to "unknown"
+                </span></span>
                 <br>
                 <input type="checkbox" id="defined_key" checked
                 onclick="if (this.checked === false){ document.getElementById('key').disabled = true; document.getElementById('mode').disabled = true;}
@@ -466,7 +485,11 @@
             </p>
 
            Does it belong to any of these genres?
-           <span class="graytext">(would the loop be useful for creating music in this genre?)</span>
+           <span class="tooltip">help...<span class="tooltiptext" style="width: 250px;">
+            - Think of this as "would the loop be useful for creating music in this genre?"
+            <br><br>- You can select multiple genres
+            </span></span>
+           <span class="graytext"></span>
                 <div id="genres">
                     <input type="checkbox" {% if "bass music" in genres %} checked {% endif %} id="bass_music"
                         value="bass music"> 
@@ -645,7 +668,13 @@
             <textarea name="comments" id="comments" cols="40" rows="5"></textarea>
 
             <p> <input type="checkbox" name="discard" value="discard"> Discard this loop from our dataset? (If it is not
-                a loop) <br></p>
+                a loop)
+                <span class="tooltip">help...<span class="tooltiptext" style="width: 250px;left:-280px;bottom:0px;">
+                    - Discard if the sound is not really a loop
+                    <br><br>- Long sounds (> ~30 seconds) should be discarted as these are most probably jams or music fragments with a structure bigger than a loop
+                </span></span>
+            
+            </p>
 
         </div>
     </div>
