@@ -407,7 +407,7 @@
                     - You can select multiple elements
                 </span></span>
                 <br>
-                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(e.g. drums, congas, cymbals)</span> <br>
+                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(e.g. drums, congas, cymbals, glitchy percussion)</span> <br>
                 <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label> <span class="graytext">(e.g. digital bass, fingered bass, 808)</span> <br>
                 <input type="checkbox" id="chords_id" name="chords" value="chords"> <label for="chords_id">Chords</label> <span class="graytext">(e.g. piano chords, guitar chords)</span> <br>
                 <input type="checkbox" id="melody_id" name="melody" value="melody"> <label for="melody_id">Melody</label> <span class="graytext">(e.g. lead instrument playing a melody, synth arpeggiator)</span> <br> 
@@ -441,7 +441,8 @@
                     - A loop is well cut if whenever it loops the metronome still sounds in the correct position
                     <br><br>- In some cases the metonome goes out of sync after several repetitions. If metronome plays well during the first ~4 repetitions, consider the loop to be well cut.
                     <br><br>- Some loops are cut in a way that there is 1 last bar of silence to account for, e.g, reverb and delay tails. This shold be considered well cut (if the metornome matches when looping).
-                </span></span>
+                    <br><br>- In case the audio loops correctly but it does not start on the perceived downbeat, add a comment saying there is an offset.
+                    </span></span>
                 <br>
                 <input id="well_cut" type="checkbox" name="wellCut" value="wellCut" checked> <label for="well_cut">Yes</label>
             </p>
