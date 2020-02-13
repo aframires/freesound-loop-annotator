@@ -170,18 +170,18 @@
                     return;
                 }
                 e.preventDefault();
-                if (e.code=="KeyA"){stopChords();}  // C
-                else if (e.code=="KeyW"){stopChords();}  // C#
-                else if (e.code=="KeyS"){stopChords();}  // D
-                else if (e.code=="KeyE"){stopChords();}  // D#
-                else if (e.code=="KeyD"){stopChords();}  // E
-                else if (e.code=="KeyF"){stopChords();}  // F
-                else if (e.code=="KeyT"){stopChords();}  // F#
-                else if (e.code=="KeyG"){stopChords();}  // G
-                else if (e.code=="KeyY"){stopChords();} // G#
-                else if (e.code=="KeyH"){stopChords();}  // A
-                else if (e.code=="KeyU"){stopChords();}  // A#
-                else if (e.code=="KeyJ"){stopChords();}  // B
+                if (e.code=="KeyA"){ if ($('#key').val() =='c') {stopChords();}}  // C
+                else if (e.code=="KeyW"){ if ($('#key').val() =='c#') {stopChords();}} // C#
+                else if (e.code=="KeyS"){ if ($('#key').val() =='d') {stopChords();}} // D
+                else if (e.code=="KeyE"){ if ($('#key').val() =='d#') {stopChords();}}  // D#
+                else if (e.code=="KeyD"){ if ($('#key').val() =='e') {stopChords();}}  // E
+                else if (e.code=="KeyF"){ if ($('#key').val() =='f') {stopChords();}}  // F
+                else if (e.code=="KeyT"){ if ($('#key').val() =='f#') {stopChords();}}  // F#
+                else if (e.code=="KeyG"){ if ($('#key').val() =='g') {stopChords();}}  // G
+                else if (e.code=="KeyY"){ if ($('#key').val() =='g#') {stopChords();}} // G#
+                else if (e.code=="KeyH"){ if ($('#key').val() =='a') {stopChords();}}  // A
+                else if (e.code=="KeyU"){ if ($('#key').val() =='a#') {stopChords();}}  // A#
+                else if (e.code=="KeyJ"){ if ($('#key').val() =='b') {stopChords();}}  // B
             });
         }
 
