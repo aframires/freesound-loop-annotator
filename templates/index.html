@@ -75,6 +75,8 @@
     <script>
 
         var chordsToggle = false;
+        var chordsOctave = 4;
+        var all_chord_trigger_keys = ["KeyA", "KeyW", "KeyS", "KeyE", "KeyD", "KeyF", "KeyT", "KeyG", "KeyY", "KeyH", "KeyU", "KeyJ", "KeyM", "Comma", "Period"]
         var metronome = new Tone.Player("{{metronome_sound_url}}").toMaster();
         var channel = new Tone.Channel().toMaster();
         var audio = new Tone.Player("{{audio_file}}");
@@ -123,7 +125,16 @@
             $('#startAudio').click(function () { startAudio(); });
 
             // Bind key actions to set and play chords
-            $("#key").keydown(function(e){
+            $("body").keydown(function(e){
+                if ($('#other_text').is(":focus") || $('#comments').is(":focus")){
+                    // If other field or comments field have focus, don't trigger notes
+                    return;
+                }
+
+                if (all_chord_trigger_keys.indexOf(e.code) == -1){
+                    return;
+                }
+
                 e.preventDefault();
 
                 if (e.originalEvent.repeat){
@@ -150,9 +161,14 @@
                     $("#mode").val(modeValues[nextMode]);
                     stopChords(); startChords();
                 }
+                else if (e.code=="Comma"){octaveDown();}
+                else if (e.code=="Period"){octaveUp();}
             });
 
-            $("#key").keyup(function(e){
+            $("body").keyup(function(e){
+                if (all_chord_trigger_keys.indexOf(e.code) == -1){
+                    return;
+                }
                 e.preventDefault();
                 if (e.code=="KeyA"){stopChords();}  // C
                 else if (e.code=="KeyW"){stopChords();}  // C#
@@ -221,12 +237,38 @@
             }
         }
 
+        function octaveUp() {
+            chordsOctave += 1;
+            if (chordsOctave > 6){
+                chordsOctave = 6;
+            }
+
+            if (chordsToggle) {
+                stopChords();
+                startChords();
+            }
+        }
+
+        function octaveDown(){
+            chordsOctave -= 1;
+            if (chordsOctave < 1){
+                chordsOctave = 1;
+            }
+
+            if (chordsToggle) {
+                stopChords();
+                startChords();
+            }
+        }
+
         function startChords() {
             chordsToggle = true
             $("#toggleChords").html("Stop chords");
 
+            console.log("Playing chords...")
+
             var chords = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b", "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
-            var chordsForSynth = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5"]
+            var chordsForSynth = ["C" + chordsOctave, "C#" + chordsOctave, "D" + chordsOctave, "D#" + chordsOctave, "E" + chordsOctave, "F" + chordsOctave, "F#" + chordsOctave, "G" + chordsOctave, "G#" + chordsOctave, "A" + chordsOctave, "A#" + chordsOctave, "B" + chordsOctave, "C" + (chordsOctave  + 1), "C#" + (chordsOctave  + 1), "D"  + (chordsOctave  + 1), "D#"  + (chordsOctave  + 1), "E"  + (chordsOctave  + 1), "F"  + (chordsOctave  + 1), "F#"  + (chordsOctave  + 1), "G"  + (chordsOctave  + 1), "G#"  + (chordsOctave  + 1), "A"  + (chordsOctave  + 1), "A#"  + (chordsOctave  + 1), "B"  + (chordsOctave  + 1)]
             var index = chords.indexOf($('#key').val())
             if (index == -1){
                 return;
@@ -481,8 +523,9 @@
                     <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                     <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
                 </select>
+                <button onclick="octaveDown();"><</button><button onclick="octaveUp();">></button>
                 <br>
-                <span class="graytext" style="font-size: 80%;"><b>TIP:</b> if you double click on the key root dropdown (to give it focus), then you can use key 'A', 'W', 'S'... to change root notes and quickly play chords without pressing the "start chords" button on the left. Also use key 'M' to cycle through scale options. </span>
+                <span class="graytext" style="font-size: 80%;"><b>TIP:</b> use keys 'A', 'W', 'S'... to change root notes and quickly play chords without pressing the "start chords" button on the left. Also use key 'M' to cycle through scale options and ',' and '.' to change octave. </span>
             </p>
 
            Does it belong to any of these genres?
