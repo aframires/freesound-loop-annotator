@@ -159,7 +159,9 @@
                     var currentMode = $("#mode").val()
                     var nextMode = (modeValues.indexOf(currentMode) + 1) % 4
                     $("#mode").val(modeValues[nextMode]);
-                    stopChords(); startChords();
+                    if (chordsToggle) {
+                        stopChords(); startChords();
+                    }
                 }
                 else if (e.code=="Comma"){octaveDown();}
                 else if (e.code=="Period"){octaveUp();}
