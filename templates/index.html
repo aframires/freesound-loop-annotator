@@ -316,8 +316,8 @@
             }, "4n");
 
 
-            function get_answers() {
-                var answers = {};
+            function get_answers(answers_init = {}) {
+                var answers = answers_init;
                 answers.instrumentation = {
                     percussion: $("input[name=percussion]").is(":checked"),
                     bass: $("input[name=bass]").is(":checked"),
@@ -327,8 +327,8 @@
                     vocal: $("input[name=vocal]").is(":checked")
                 }
                 if ($('#other_element').is(":checked")) { answers.instrumentation.other = $('#other_text').val() }
-                if ($('#defined_tempo').is(":checked")){answers.bpm = $("input[name=bpm]").val()}
-                else{answers.bpm = "none"}
+                answers.defined_tempo =$("#defined_tempo").is(":checked");
+                answers.bpm = $("input[name=bpm]").val()
                 answers.signature = String($("input[name=metricUpper]").val()) + "/" + String($("input[name=metricLower]").val())
                 answers.well_cut = $("#well_cut").is(":checked");
                 if($('#defined_key').is(":checked")){
@@ -346,18 +346,18 @@
                 });
 
                 answers.comments = $("textarea#comments").val()
-                answers.discard = $("input[name=discard]").is(":checked")
+                //answers.discard = $("input[name=discard]").is(":checked")
                 console.log(answers)
                 return answers
             }
 
-            function send_answers() {
+            function send_answers(answers_init = {}) {
                 var result = confirm("Are you sure?")
                 if (result===false){
                     return
                 }
 
-                var answers = get_answers();
+                var answers = get_answers(answers_init);
                 var data = {
                     answers: answers,
                     page: '{{page}}',
@@ -377,7 +377,9 @@
             }
 
 
-            $('#submit-button').click(function () { send_answers(); });
+            $('#submit-button').click(function () { answers = {}; answers.discard = false; answers.save_for_later = false; send_answers(answers); }); });
+            $('#save-for-later-button').click(function () { answers = {}; answers.discard = false; answers.save_for_later = true; send_answers(answers); });
+            $('#discard-button').click(function () { answers = {}; answers.discard = true; answers.save_for_later = false; send_answers(answers); });
             //$('#stopChords').click(function () { stopChords(); });
 
         });
@@ -416,6 +418,13 @@
             <br>
             <button id="submit-button"
                 style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Submit! :)</button>
+            <button id="save-for-later-button"
+                style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Save for Later</button>
+            <button id="discard-button"
+                style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Discard :(</button>
+            
+            
+            
             <br>
 
         </div>
@@ -466,11 +475,12 @@
                 <span class="tooltip">help...<span class="tooltiptext" style="width: 300px;">
                     - If a loop has changing tempo, you can put here the initial tempo and add a note in the comment section
                     <br><br>- If the BPM does not match and it is not easy to find the correct one, add a note in the comments section and discard the loop.
+                    <br><br>- If the loop has no clear beat, but you can find the tempo, unselect the "defined tempo" checkbox and put the bpm
+                    <br><br>- If the loop has a clear beat, but you cannot find the tempo, select the "defined tempo" checkbox and leave the bpm empty
+
                 </span></span>
                 <br>
-                <input type="checkbox" id="defined_tempo" checked
-                onclick="if (this.checked === false){ document.getElementById('bpm').disabled = true;} 
-                        else{document.getElementById('bpm').disabled = false;}"> <label for="defined_tempo"> The loop has a clear and steady tempo</label>
+                <input type="checkbox" id="defined_tempo" checked> <label for="defined_tempo"> The loop has a clear and steady tempo</label>
                 <br>                
                 <input type="text" name="bpm" id="bpm" value="{{guessedBPM}}" onchange="restartMetronome();">
             </p>
@@ -713,8 +723,7 @@
             <p>Any comments?</p>
             <textarea name="comments" id="comments" cols="40" rows="5"></textarea>
 
-            <p> <input type="checkbox" name="discard" value="discard"> Discard this loop from our dataset? (If it is not
-                a loop)
+            <p> <!--<input type="checkbox" name="discard" value="discard">--> When to discard a loop: 
                 <span class="tooltip">help...<span class="tooltiptext" style="width: 250px;left:-280px;bottom:0px;">
                     - Discard if the sound is not really a loop_name
                     <br><br>- Drum fills, sampels of single notes (one shots) should generally be discarted.
