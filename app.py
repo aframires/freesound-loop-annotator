@@ -105,6 +105,7 @@ def annotator():
     loop_name = metadata["name"]
     sound_image = metadata["image"]
     description = metadata["description"]
+    username = metadata["username"]
     
     tags = metadata["tags"]
     tags_to_display = ', '.join(tags)
@@ -136,6 +137,7 @@ def annotator():
                             metronome_sound_url=METRONOME_SOUND_URL,
                             loop_name=loop_name,
                             description=description,
+                            username=username,
                             tags=tags_to_display,
                             sound_image=sound_image,
                             guessedBPM=guessed_BPM,

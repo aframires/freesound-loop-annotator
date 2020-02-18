@@ -8,6 +8,10 @@
             font-family: Helvetica, Arial, sans-serif;
         }
 
+        button {
+            margin-bottom: 5px;
+        }
+
         .row {
             display: flex;
         }
@@ -86,7 +90,8 @@
         function init() {
 
             wavesurfer = WaveSurfer.create({
-                container: '#waveform'
+                container: '#waveform',
+                interact: false
             });
             wavesurfer.load("{{audio_file}}")
             wavesurfer.setMute(true)
@@ -293,7 +298,7 @@
 
         function stopChords() {
             chordsToggle = false
-            $("#toggleChords").html("Start chords");
+            $("#toggleChords").html("Play chords");
             synth.releaseAll()
         }
 
@@ -326,7 +331,7 @@
                     fx: $("input[name=fx]").is(":checked"),
                     vocal: $("input[name=vocal]").is(":checked")
                 }
-                if ($('#other_element').is(":checked")) { answers.instrumentation.other = $('#other_text').val() }
+                //if ($('#other_element').is(":checked")) { answers.instrumentation.other = $('#other_text').val() }
                 answers.defined_tempo =$("#defined_tempo").is(":checked");
                 answers.bpm = $("input[name=bpm]").val()
                 answers.signature = String($("input[name=metricUpper]").val()) + "/" + String($("input[name=metricLower]").val())
@@ -392,6 +397,7 @@
     <div class="row">
         <div class="column">
             <h1>{{sound_id}} - {{loop_name}} [{{page}}/{{n_pages}}]</h1>
+            <p><b>Username:</b> {{username}}</p>
             <p><b>Description:</b> {{description}}</p>
             <p><b>Tags:</b> {{tags}}</p>
             <!-- <img stlye="width:90%;" src="{{sound_image}}" alt="{{sound_image}}"> -->
@@ -399,34 +405,40 @@
                 src="https://freesound.org/embed/sound/iframe/{{sound_id}}/simple/medium/">
             </iframe-->
             <div id="waveform" style="width:500px;"></div>
-            <p class="graytext">The audio will keep looping, even after the visualisation is finished</p>
+            <p class="graytext">Note that the audio playhead <b>won't</b> follow the looping</p>
 
-            <button id="startAudioMetronome" title="Start audio and metronome">Play</button> 
-            <button id="stopAudioMetronome" title="Stop audio and metronome">Stop</button>
+            <button id="startAudioMetronome" title="Start audio and metronome">&#9654;</button> 
+            <button id="stopAudioMetronome" title="Stop audio and metronome">&#9632;</button>
+            <button id="plusAudio">Audio Volume +</button>
+            <button id="minusAudio">Audio Volume -</button>
             <!--br>
             <button id="startAudio" title="Restart audio, keep metronome">Cue audio</button>
             <br-->
             <br>
             <button id="restartMetronome" title="Restart the metronome, keep the audio playing">Restart metronome</button>
             <button id="toggleMetronome" title="Mute/unmute metronome">Mute metronome</button>
-            <br>
-            <button id="toggleChords">Start chords</button>
-            <br>
-            <button id="plusAudio">Audio Volume +</button>
-            <button id="minusAudio">Audio Volume -</button>
+            <button id="toggleChords">Play chords</button>
             <br>
             <br>
             <button id="submit-button"
-                style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Submit! :)</button>
+                style="margin-left:calc(50% - 75px); width:150px; height: 75px; margin-bottom: 5px; background-color: green; color: white; font-size: 120%; border-radius: 10px;">Submit :)</button>
             <button id="save-for-later-button"
-                style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Save for Later</button>
+                style="margin-left:calc(50% - 75px); width:150px; height: 75px; margin-bottom: 5px; background-color: orange; color: white; font-size: 120%; border-radius: 10px;">
+                <span class="tooltip">Save for later<span class="tooltiptext" style="width: 250px;bottom:0px;">
+                    - Save for later will remove your loop from the list of assigned loops
+                    <br><br>- Make as <i>save for later</i> these loops which are difficult to annotate (e.g. tempo does not match, loop is very confusing)
+                    <br><br>- Try to be quite strict with that option. It should mainly be used to get rid of some cases of time-consuming annotations that you know are problematic.
+                    <br><br>- Admins will be able to get a list of all the loops which have been saved for later
+                </span></span>
+            </button>
             <button id="discard-button"
-                style="margin-left:calc(50% - 75px); width:150px; height: 100px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">Discard :(</button>
-            
-            
-            
-            <br>
-
+                style="margin-left:calc(50% - 75px); width:150px; height: 75px; margin-bottom: 5px; background-color: crimson; color: white; font-size: 120%; border-radius: 10px;">
+                    <span class="tooltip">Discard :(<span class="tooltiptext" style="width: 250px;bottom:0px;">
+                        - Discard if the sound is not really a loop
+                        <br><br>- Drum fills, sampels of single notes (one shots) should generally be discarted.
+                        <br><br>- Long sounds (> ~30 seconds) should be discarted as these are most probably jams or music fragments with a structure bigger than a loop
+                    </span></span>
+            </button>
         </div>
 
         <span class="column" style="background-color: #F5F5F5; padding-left: 20px;">
@@ -457,27 +469,27 @@
 
             <p>What elements does the loop conatin?
                 <span class="tooltip">help...<span class="tooltiptext" style="width: 200px;">
-                    - You can select multiple elements
+                    - You can check multiple elements
+                    <br><br>- If you can't decide between two elements, check both
+                    <br><br>- If the loop contains weird and glitchy sounds rhythmically organized, this should be "percussion" and not necessarily "sound fx"
                 </span></span>
                 <br>
-                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(e.g. drums, congas, cymbals, glitchy percussion)</span> <br>
-                <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label> <span class="graytext">(e.g. digital bass, fingered bass, 808)</span> <br>
-                <input type="checkbox" id="chords_id" name="chords" value="chords"> <label for="chords_id">Chords</label> <span class="graytext">(e.g. piano chords, guitar chords)</span> <br>
+                <input type="checkbox" id="percussion_id" name="percussion" value="percussion"> <label for="percussion_id">Percussion</label> <span class="graytext">(e.g. drums, congas, cymbals, glitchy percussion, tuned percussion)</span> <br>
+                <input type="checkbox" id="bass_id" name="bass" value="bass"> <label for="bass_id">Bass</label> <span class="graytext">(e.g. synth bass, fingered bass)</span> <br>
+                <input type="checkbox" id="chords_id" name="chords" value="chords"> <label for="chords_id">Chords</label> <span class="graytext">(e.g. piano chords, guitar chords, synth pads)</span> <br>
                 <input type="checkbox" id="melody_id" name="melody" value="melody"> <label for="melody_id">Melody</label> <span class="graytext">(e.g. lead instrument playing a melody, synth arpeggiator)</span> <br> 
-                <input type="checkbox" id="fx_id" name="fx" value="fx"> <label for="fx_id">Sound FX</label> <span class="graytext">(e.g. risers, cinematic sounds, foley)</span> <br>
-                <input type="checkbox" id="vocal_id" name="vocal" value="vocal"> <label for="vocal_id">Vocal</label> <span class="graytext">(e.g. singing voice, spoken Word, vocoder)</span> <br>
-                <input type="checkbox" id="other_element"
+                <input type="checkbox" id="fx_id" name="fx" value="fx"> <label for="fx_id">Sound fx</label> <span class="graytext">(e.g. risers, cinematic sounds, foley)</span> <br>
+                <input type="checkbox" id="vocal_id" name="vocal" value="vocal"> <label for="vocal_id">Vocal</label> <span class="graytext">(e.g. singing voice, spoken word, vocoder)</span> <br>
+                <!--input type="checkbox" id="other_element"
                     onclick="if (this.checked){ document.getElementById('other_text').removeAttribute('disabled');}" /><textarea
-                    id="other_text" name="other_text" disabled>Other</textarea>
+                    id="other_text" name="other_text" disabled>Other</textarea-->
             </p>
 
-            <p>What is the BPM?
+            <p>What is the tempo (BPM)?
                 <span class="tooltip">help...<span class="tooltiptext" style="width: 300px;">
-                    - If a loop has changing tempo, you can put here the initial tempo and add a note in the comment section
-                    <br><br>- If the BPM does not match and it is not easy to find the correct one, add a note in the comments section and discard the loop.
-                    <br><br>- If the loop has no clear beat, but you can find the tempo, unselect the "defined tempo" checkbox and put the bpm
-                    <br><br>- If the loop has a clear beat, but you cannot find the tempo, select the "defined tempo" checkbox and leave the bpm empty
-
+                    - If a loop has changing tempo, you can put here the initial tempo and add a note in the comment section (also uncheck the "The loop has a clear and steady tempo" option)
+                    <br><br>- If the proposed tempo does not match and it is not easy to find the correct one, add a note in the comments section and click the "save for later" option.
+                    <br><br>- If the loop has no clear beat, but you can still find the tempo, unselect the "The loop has a clear and steady tempo" checkbox and add the tempo
                 </span></span>
                 <br>
                 <input type="checkbox" id="defined_tempo" checked> <label for="defined_tempo"> The loop has a clear and steady tempo</label>
@@ -535,9 +547,9 @@
                     <option value="maj" {% if guessedMode=="major"%} selected{% endif %}>Major</option>
                     <option value="min" {% if guessedMode=="minor"%} selected{% endif %}>Minor</option>
                 </select>
-                <button onclick="octaveDown();"><</button><button onclick="octaveUp();">></button>
+                <button onclick="octaveDown();" title="octave down"><</button><button onclick="octaveUp();" title="octave up">></button>
                 <br>
-                <span class="graytext" style="font-size: 80%;"><b>TIP:</b> use keys 'A', 'W', 'S'... to change root notes and quickly play chords without pressing the "start chords" button on the left. Also use key 'M' to cycle through scale options and ',' and '.' to change octave. </span>
+                <span class="graytext" style="font-size: 80%;"><b>TIP:</b> use keys 'A', 'W', 'S'... to change root notes and quickly play chords without pressing the "play chords" button on the left. Also use key 'M' to cycle through scale options and ',' and '.' to change octave. </span>
             </p>
 
            Does it belong to any of these genres?
@@ -722,15 +734,6 @@
             <br>
             <p>Any comments?</p>
             <textarea name="comments" id="comments" cols="40" rows="5"></textarea>
-
-            <p> <!--<input type="checkbox" name="discard" value="discard">--> When to discard a loop: 
-                <span class="tooltip">help...<span class="tooltiptext" style="width: 250px;left:-280px;bottom:0px;">
-                    - Discard if the sound is not really a loop_name
-                    <br><br>- Drum fills, sampels of single notes (one shots) should generally be discarted.
-                    <br><br>- Long sounds (> ~30 seconds) should be discarted as these are most probably jams or music fragments with a structure bigger than a loop
-                </span></span>
-            
-            </p>
 
         </div>
     </div>
