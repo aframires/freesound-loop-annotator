@@ -23,11 +23,11 @@ Now start docker:
 `docker-compose up`
 
 Use Google Chrome to navigate to this address:
-`http://localhost:5000/`
+`http://localhost:5000/fslannotator/`
 
 You'll be presented with loops to annotate. Fill in all the fields and click "submit". This will save your annotations and automatically **move to the next loop**.
 
-Reloading `http://localhost:5000/` will present you the last unnanotated loop, therefore you can safely close the browser at any time.
+Reloading `http://localhost:5000/fslannotator/` will present you the last unnanotated loop, therefore you can safely close the browser at any time.
 
 The annotations are stored using JSON files saved inside the `annotations/` inside the `FSL10K` folder mounted in the container. Once all sounds are annotated, zip the annotations directory and please send the file as per the email instructions.
 
