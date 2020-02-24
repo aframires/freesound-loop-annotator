@@ -1,3 +1,4 @@
+from getsounds import select_relevant_sounds
 from flask import Flask, render_template, request, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 import json
@@ -14,6 +15,7 @@ PATH_TO_ALL_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.js
 PATH_TO_SOUND_IDS_PER_USER = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list_username.json')
 PATH_TO_AC_ANALYSIS = os.path.join(PATH_TO_FSL10K, 'ac_analysis/')
 PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
+PATH_TO_JOINED_METADATA = os.path.join(PATH_TO_FSL10K, "metadata.json")
 PATH_TO_AUDIO_FILES = os.path.join(PATH_TO_FSL10K,'audio/wav')
 PATH_TO_GENRE_FILE = os.path.join(PATH_TO_FSL10K, 'parent_genres.json')
 PATH_TO_ANNOTATIONS =  os.path.join(PATH_TO_FSL10K, 'annotations/')
@@ -24,9 +26,10 @@ users =  json.load(open(PATH_TO_USERS_FILE, 'rb'))
 all_sound_ids = json.load(open(PATH_TO_ALL_SOUND_IDS, 'rb')) 
 sound_id_user = json.load(open(PATH_TO_SOUND_IDS_PER_USER,'rb'))
 genres_file = json.load(open(PATH_TO_GENRE_FILE, 'rb'))
+joined_metadata = json.load(open(PATH_TO_JOINED_METADATA, 'rb'))
 
-default_N_assign_more_sounds = 5
-enable_auto_assign_annotations = False
+default_N_assign_more_sounds = 10
+enable_auto_assign_annotations = True
 
 
 @auth.verify_password
@@ -45,10 +48,8 @@ def mkdir_p(path):
             raise
 
 def assign_more_sounds_to_user(username, N=default_N_assign_more_sounds):
-    # TODO: this function randomly assigns a maximum of N new annotations
-    # we should do a real implementation which choses wisely which sounds
-    # to assign
-    new_ids = random.sample(all_sound_ids, N)
+
+    new_ids = select_relevant_sounds(PATH_TO_ANNOTATIONS, joined_metadata, genres_file, all_sound_ids, N)
     current_ids = sound_id_user[username]
     new_non_overlapping_ids = list(set(new_ids).difference(current_ids))
     sound_id_user[username] += new_non_overlapping_ids
