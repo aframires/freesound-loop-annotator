@@ -2,20 +2,7 @@ import os
 import glob
 import json
 
-#I ADDED A DOT HERE !!!!!!!
-#PATH_TO_FSL10K = "./static/FSL10K"
-
-#PATH_TO_ALL_SOUND_IDS = os.path.join(PATH_TO_FSL10K, 'metadata_sound_ids_list.json')
-#PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, "metadata.json")
-#PATH_TO_GENRES = os.path.join(PATH_TO_FSL10K, "parent_genres.json")
-#PATH_TO_ANNOTATIONS =  os.path.join(PATH_TO_FSL10K, 'annotations/')
 default_N_assign_more_sounds = 10
-
-#metadata = json.load(open(PATH_TO_METADATA, 'rb'))
-#genres_metadata = json.load(open(PATH_TO_GENRES, 'rb'))
-#all_sound_ids = json.load(open(PATH_TO_ALL_SOUND_IDS,'rb'))
-
-
 
 def compile_annotated_sounds(annotations_path):
     annotated_sounds = {}
@@ -95,9 +82,22 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
 
     sounds_annotated = compile_annotated_sounds(annotations_path)
 
+    #These weights are used to create an irrelevance metric for each loop
+    #based on the existing annotated loops
+
+    #If a loop has been annotated already, multiply the number of times it has been
+    #annotated by this weight. 1000 makes sure that we first annotate sounds which
+    #haven't been annotated
     anno_weight=1000
+    #The number of times the author has been annotated should lightly influence the overall
+    #irrelevance score. We chose a lower value which allows for more important metrics 
+    #such as the number of times annotated to predominate
     auth_weight=1
+    #Same applies to the number of times a pack has been annotated
     pack_weight=1
+    #The genre importance forces the algorithm to fetch sounds from the less annotated 
+    #genres. As gen_importance is proportional to the importance of the loop to be annotated
+    #we select a negative weight, to make the loops "less irrelevant"
     genre_weight=-10
 
     authors_sounds = collect_authors(sounds_annotated,metadata)
@@ -125,7 +125,6 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
     
     sound_irrelevance_sorted = sorted(sound_irrelevance_list, key=lambda x: x[1])
     sound_irrelevance_ids = [lis[0] for lis in sound_irrelevance_sorted]
-    print(sound_irrelevance_ids[0:N])
     return sound_irrelevance_ids[0:N]
 
     

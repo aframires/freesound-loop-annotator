@@ -48,11 +48,8 @@ def mkdir_p(path):
             raise
 
 def assign_more_sounds_to_user(username, N=default_N_assign_more_sounds):
-    # TODO: this function randomly assigns a maximum of N new annotations
-    # we should do a real implementation which choses wisely which sounds
-    # to assign
+
     new_ids = select_relevant_sounds(PATH_TO_ANNOTATIONS, joined_metadata, genres_file, all_sound_ids, N)
-    print(new_ids)
     current_ids = sound_id_user[username]
     new_non_overlapping_ids = list(set(new_ids).difference(current_ids))
     sound_id_user[username] += new_non_overlapping_ids
