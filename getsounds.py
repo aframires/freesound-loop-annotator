@@ -21,6 +21,14 @@ def compile_annotated_sounds(annotations_path):
 
     return annotated_sounds
 
+def collect_assigned_sounds(sound_id_user):
+    assigned_sounds = []
+    for key in sound_id_user.keys():
+        for sound in sound_id_user[key]:
+            assigned_sounds.append(sound)
+
+    return assigned_sounds
+
 
 def collect_authors(sounds_annotated,metadata):
     author_sounds = {}
@@ -78,7 +86,7 @@ def discard_packs(all_sound_ids,metadata):
 
 
 
-def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound_ids, N=default_N_assign_more_sounds):
+def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound_ids, sound_id_user, N=default_N_assign_more_sounds):
 
     sounds_annotated = compile_annotated_sounds(annotations_path)
 
@@ -88,7 +96,7 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
     #If a loop has been annotated already, multiply the number of times it has been
     #annotated by this weight. 1000 makes sure that we first annotate sounds which
     #haven't been annotated
-    anno_weight=1000
+    anno_weight=500
     #The number of times the author has been annotated should lightly influence the overall
     #irrelevance score. We chose a lower value which allows for more important metrics 
     #such as the number of times annotated to predominate
@@ -105,6 +113,7 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
     genre_sounds = collect_genres(sounds_annotated)
     sounds_to_rate = discard_packs(all_sound_ids,metadata)
     sound_irrelevance_list = []
+    assigned_sounds = collect_assigned_sounds(sound_id_user)
 
     for sound in sounds_to_rate:
         num_annotated = 0
@@ -118,9 +127,11 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
         num_pack = 0
         if pack_sounds.get(metadata[sound]["pack"]) != None:
             num_pack = pack_sounds[metadata[sound]["pack"]]
+
+        num_assigned = assigned_sounds.count(sound)
         
         gen_importance = genre_importance(genre_metadata.get(sound,[]), genre_sounds)
-        irrelevance = num_annotated*anno_weight + num_author*auth_weight + num_pack*pack_weight + gen_importance*genre_weight
+        irrelevance = (num_annotated+num_assigned)*anno_weight + num_author*auth_weight + num_pack*pack_weight + gen_importance*genre_weight
         sound_irrelevance_list.append((sound,irrelevance))
     
     sound_irrelevance_sorted = sorted(sound_irrelevance_list, key=lambda x: x[1])
