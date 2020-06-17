@@ -28,7 +28,7 @@ sound_id_user = json.load(open(PATH_TO_SOUND_IDS_PER_USER,'rb'))
 genres_file = json.load(open(PATH_TO_GENRE_FILE, 'rb'))
 joined_metadata = json.load(open(PATH_TO_JOINED_METADATA, 'rb'))
 
-default_N_assign_more_sounds = 10
+default_N_assign_more_sounds = 125
 enable_auto_assign_annotations = True
 
 
