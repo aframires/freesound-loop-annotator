@@ -96,7 +96,7 @@
             wavesurfer.load("{{audio_file}}")
             wavesurfer.setMute(true)
             
-            synth = new Tone.PolySynth(10, Tone.Synth, {
+            synth = new Tone.PolySynth(Tone.Synth, {
                 oscillator: {
                     type: "triangle"
                 },
