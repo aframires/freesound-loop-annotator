@@ -1,0 +1,4 @@
+- 25/11/2015
+
+To compile essentia tag 2.1-beta1 replace the wscript with the one found in this folder if you have problems
+because of gaia-related files.

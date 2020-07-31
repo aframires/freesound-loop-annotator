@@ -1,0 +1,10 @@
+python scripts/analyze_dataset.py ~/Data/AudioCommons/apple_loops_db --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/carlos_vaquero_instrument_samples --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/freesound_loops_db_4000 --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/mixcraft_loops_db --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/giantsteps-key-dataset --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/good-sounds --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/iowa_instrument_samples --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/philharmonic_orchestra_samples --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/nsynth-test --algorithms=ac_extractor2 --force --workers=4 >> out2.log
+python scripts/analyze_dataset.py ~/Data/AudioCommons/nsynth-valid --algorithms=ac_extractor2 --force --workers=4 >> out2.log

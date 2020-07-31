@@ -1,0 +1,259 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+import os.path
+
+
+def options(ctx):
+    ctx.add_option('--with-python', action='store_true',
+                   dest='WITH_PYTHON', default=False,
+                   help='build the python bindings')
+    ctx.add_option('--with-examples', action='store_true',
+                   dest='WITH_EXAMPLES', default=False,
+                   help='build the example programs')
+    ctx.add_option('--with-static-examples', action='store_true',
+                   dest='WITH_STATIC_EXAMPLES', default=False,
+                   help='build the example programs as static executables (WARNING: only works on debian wheezy with custom-compiled ffmpeg)')
+    ctx.add_option('--with-vamp', action='store_true',
+                   dest='WITH_VAMP', default=False,
+                   help='build the vamp plugin wrapper')
+
+    #add option --with-gaia
+
+
+def debian_version():
+    try:
+        v = open('/etc/debian_version').read().strip()
+        return [ int(n) for n in v.split('.') ]
+    except IOError:
+        return []
+    except ValueError:
+        # string version instead of numeric
+        if 'wheezy' in v or 'sid' in v:
+            return [7, 0]
+        else:
+            return [6, 0]
+
+
+def configure(ctx):
+    ctx.env.WITH_EXAMPLES = ctx.options.WITH_EXAMPLES
+    ctx.env.WITH_PYTHON   = ctx.options.WITH_PYTHON
+    ctx.env.WITH_VAMP     = ctx.options.WITH_VAMP
+    ctx.env.WITH_STATIC_EXAMPLES = ctx.options.WITH_STATIC_EXAMPLES
+
+    if ctx.env.WITH_STATIC_EXAMPLES:
+        ctx.env.WITH_EXAMPLES = True
+
+    ctx.env.ALGOIGNORE = []
+    #ctx.env.ALGOIGNORE += ['GaiaTransform'] #TODO gaia
+
+
+    ctx.check_cfg(package='libavcodec', uselib_store='AVCODEC',
+                  args=['libavcodec >= 53.25.0', '--cflags', '--libs'], 
+                  msg='Checking for \'libavcodec\' >= 53.25.0',
+                  mandatory=False)
+
+    ctx.check_cfg(package='libavformat', uselib_store='AVFORMAT',
+                  args=['--cflags', '--libs'], mandatory=False)
+
+    ctx.check_cfg(package='libavutil', uselib_store='AVUTIL',
+                  args=['--cflags', '--libs'], mandatory=False)
+
+    ctx.check_cfg(package='libswresample', uselib_store='SWRESAMPLE',
+                  args=['--cflags', '--libs'], mandatory=False)
+
+    if ctx.env.WITH_STATIC_EXAMPLES:
+        #print('Static examples incompatible with TagLib, skipping TagLib detection...')
+        print('Static examples incompatible with Gaia, skipping Gaia detection...')   
+    else:
+        pass
+        #ctx.check_cfg(package='taglib', uselib_store='TAGLIB',
+        #              args=['taglib >= 1.9', '--cflags', '--libs'], 
+        #              msg='Checking for \'taglib\' >= 1.9',
+        #              mandatory=False)
+        #ctx.check_cfg(package='gaia2', uselib_store='GAIA2',
+        #              args=['--cflags', '--libs'], mandatory=False)
+
+    ctx.check_cfg(package='taglib', uselib_store='TAGLIB',
+                  args=['taglib >= 1.9', '--cflags', '--libs'], 
+                  msg='Checking for \'taglib\' >= 1.9',
+                  mandatory=False)
+
+    # needed by ffmpeg for the INT64_C macros
+    ctx.env.DEFINES += [ '__STDC_CONSTANT_MACROS' ]
+
+    # NOTE: Debian Squeeze doesn't provide pkg-config files for libyaml, but
+    #       Debian Wheezy does... Mac OS X (brew) does it also.
+    debver = debian_version()
+    is_squeeze = (debver and debver[0] < 7)
+
+    if is_squeeze:
+        ctx.env.LINKFLAGS += [ '-lyaml' ]
+    else:
+        ctx.check_cfg(package='yaml-0.1', uselib_store='YAML',
+                      args=['--cflags', '--libs'])
+
+    ctx.check_cfg(package='fftw3f', uselib_store='FFTW',
+                  args=['--cflags', '--libs'])
+
+    ctx.check_cfg(package='samplerate', uselib_store='SAMPLERATE',
+                  args=['--cflags', '--libs'])
+
+    if ctx.env.WITH_EXAMPLES or ctx.env.WITH_VAMP:
+        ctx.recurse('examples')
+
+    if ctx.env.WITH_PYTHON:
+        ctx.recurse('python')
+
+
+
+    # prepare the compilation environment using the detected libraries
+    print
+    print('================================ CONFIGURATION SUMMARY ================================')
+
+
+    def has(name):
+        return ('HAVE_%s' % name.upper()) in ctx.env['define_key']
+
+    # these are mandatory dependencies
+    ctx.env.USES = 'FFTW YAML'
+
+    algos = [ 'AudioLoader', 'MonoLoader', 'EqloudLoader', 'EasyLoader', 'MonoWriter', 'AudioWriter' ]
+    if has('avcodec') and has('avformat') and has('avutil'):
+        print('- FFmpeg / libav detected!')
+        print('  The following algorithms will be included: %s\n' % algos)
+        ctx.env.USES += ' AVFORMAT AVCODEC AVUTIL'
+    else:
+        print('- FFmpeg (or libav on debian/ubuntu) seems to be missing.')
+        print('  The following algorithms will be ignored: %s\n' % algos)
+        ctx.env.ALGOIGNORE += algos
+
+
+    if has('swresample'):
+        ctx.env.USES += ' SWRESAMPLE'
+    else:
+        print('- FFmpeg install with swresample support seems to be missing.')
+        print('  Will be using an embedded copy for doing audio conversion\n')
+
+    algos = [ 'Resample' ]
+    if has('samplerate'):
+        print('- libsamplerate (SRC) detected!')
+        print('  The following algorithms will be included: %s\n' % algos)
+        ctx.env.USES += ' SAMPLERATE'
+    else:
+        print('- libsamplerate seems to be missing.')
+        print('  The following algorithms will be ignored: %s\n' % algos)
+        ctx.env.ALGOIGNORE += algos
+
+    algos = [ 'MetadataReader' ]
+    if has('taglib'):
+        print('- TagLib detected!')
+        print('  The following algorithms will be included: %s\n' % algos)
+        ctx.env.USES += ' TAGLIB'
+    else:
+        print('- TagLib seems to be missing.')
+        print('  The following algorithms will be ignored: %s\n' % algos)
+        ctx.env.ALGOIGNORE += algos
+
+    algos = [ 'GaiaTransform' ]
+    if has('gaia2'):
+        print('- Gaia2 detected!')
+        print('  The following algorithms will be included: %s\n' % algos)
+        ctx.env.USES += ' GAIA2'
+    else:
+        print('- Gaia2 seems to be missing.')
+        print('  The following algorithms will be ignored: %s\n' % algos)
+        ctx.env.ALGOIGNORE += algos
+
+
+    print('=======================================================================================')
+
+
+
+from waflib.Task import Task
+class BuildAlgoReg(Task):
+    def run(self):
+        return self.exec_command('cp %s %s' % (self.inputs[0].abspath(),
+                                               self.outputs[0].abspath()))
+
+def build(ctx):
+    print('→ building from ' + ctx.path.abspath())
+    #print('  BUILD ENV:\n%s' % ctx.env)
+
+    # add essentia root folder to path to be able to import utils.algorithms_info
+    sys.path = [ctx.path.find_dir('..')] + sys.path
+
+    # get list of available algorithms
+    from utils.algorithms_info import get_all_algorithms, create_registration_cpp, create_version_h
+    
+    algos = get_all_algorithms(ctx.path.find_dir('algorithms').abspath(),
+                               root_dir = ctx.path.abspath())
+
+    # select the algorithms we want to build
+    if ctx.env['ALGOINCLUDE']:
+        print('Building the following algorithms: %s' % ', '.join(ctx.env['ALGOINCLUDE']))
+    else:
+        print('Building all the algorithms')
+
+    if ctx.env['ALGOIGNORE']:
+        print('Ignoring the following algorithms: %s' % ', '.join(ctx.env['ALGOIGNORE']))
+        for algoname in ctx.env['ALGOIGNORE']:
+            del algos[algoname]
+
+    # create version.h header file
+    create_version_h('src/version.h', ctx.env.VERSION, ctx.env.GIT_SHA)
+
+
+    # create algorithms registration file
+    algoreg_path = 'src/algorithms/essentia_algorithms_reg.cpp'
+    create_registration_cpp(algos, algoreg_path, use_streaming=True)
+
+    sources = ctx.path.ant_glob('essentia/**/*.cpp')
+
+    # do not compile audiocontext.cpp if we're not compiling ffmpeg
+    if 'AVCODEC' not in ctx.env.USES:
+        sources = [ s for s in sources if 'audiocontext' not in str(s) ]
+
+    # add all algorithms found in the algorithms/ folder
+    sources += [ ctx.path.find_resource('algorithms/essentia_algorithms_reg.cpp') ]
+    sources += [ ctx.path.find_resource(algo['source']) for algo in algos.values() ]
+
+    # TODO: recursive includes are needed only for the algorithms, not for the base
+    #       library. See if there's no way to split them.
+    ctx.env.INCLUDES = [ '.', 'essentia', 'essentia/scheduler', 'essentia/streaming',
+                         'essentia/streaming/algorithms', 'essentia/utils',
+                         '3rdparty' ]
+
+    ctx.stlib(
+        source   = sources,
+        target   = 'essentia',
+        use      = ctx.env.USES,
+        install_path = '${PREFIX}/lib',
+        #includes = ctx.env.includes
+    )
+
+    def write_pcfile(task):
+        open('build/essentia.pc', 'w').write(ctx.env.pcfile)
+
+    ctx(rule=write_pcfile,  name='write_pcfile', target='../essentia.pc')
+    ctx.add_group()
+
+
+    # install headers if asked to
+    headers = ctx.path.ant_glob('essentia/**/*.h')
+    for h in headers:
+        install_dir = os.path.split(h.srcpath())[0][4:]
+        ctx.install_files('${PREFIX}/include/' + install_dir, h)
+
+    # install pkgconfig file
+    #pc = ctx.path.ant_glob('essentia/build/essentia.pc') #TODO remove
+    #ctx.install_files('${PREFIX}/lib/pkgconfig', pc)     #TODO remove
+    ctx.install_files('${PREFIX}/lib/pkgconfig', '../essentia.pc')
+
+
+    if ctx.env.WITH_EXAMPLES or ctx.env.WITH_VAMP:
+        ctx.recurse('examples')
+
+    if ctx.env.WITH_PYTHON:
+        ctx.recurse('python')
