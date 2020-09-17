@@ -42,7 +42,7 @@ token_url = 'https://freesound.org/apiv2/oauth2/access_token/'
 # See documentation of "Step 3" below to understand how to fill in the 
 # "Callback URL" field when registering the new credentials.
 
-client_file = "client.json"
+client_file = os.path.join(PATH_TO_FSL10K,"client.json")
 client_info = json.load(open(client_file, 'rb'))
 client_id = client_info["id"]
 client_secret = client_info["secret"]
