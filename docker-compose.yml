@@ -11,4 +11,4 @@ services:
     stop_signal: SIGINT
     volumes:
       - .:/code
-      - /Users/ffont/Data/FSL10K0:/static/FSL10K
+      - ./static/FSL10K:/static/FSL10K
