@@ -369,13 +369,13 @@
                     id: '{{sound_id}}'
                 }
                 $.ajax({
-                    url: '/fslannotator/',
+                    url: '/fslannotator/annotate',
                     type: 'post',
                     dataType: 'json',
                     contentType: 'application/json',
                     success: function (data) {
                         console.log(data);
-                        window.location.replace("/fslannotator/?p={{page+1}}");
+                        window.location.replace("/fslannotator/annotate/?p={{page+1}}");
                     },
                     data: JSON.stringify(data)
                 });
