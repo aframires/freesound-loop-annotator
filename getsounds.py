@@ -4,6 +4,9 @@ import json
 
 default_N_assign_more_sounds = 10
 PATH_TO_FSL10K = "/static/FSL10K"
+PATH_TO_AC_ANALYSIS = os.path.join(PATH_TO_FSL10K, 'ac_analysis/')
+PATH_TO_METADATA = os.path.join(PATH_TO_FSL10K, 'fs_analysis/')
+
 
 def compile_annotated_sounds(annotations_path):
     annotated_sounds = {}
@@ -137,7 +140,14 @@ def select_relevant_sounds(annotations_path, metadata, genre_metadata, all_sound
         
         gen_importance = genre_importance(genre_metadata.get(sound,[]), genre_sounds)
         irrelevance = (num_annotated+num_assigned)*anno_weight + num_author*auth_weight + num_pack*pack_weight + gen_importance*genre_weight
-        sound_irrelevance_list.append((sound,irrelevance))
+
+        ac_analysis_filename = metadata[sound]["preview_url"]
+        base_name = ac_analysis_filename[ac_analysis_filename.rfind("/"):ac_analysis_filename.find("-hq")]
+        ac_analysis_filename =  base_name + "_analysis.json"
+
+
+        if os.path.exists(PATH_TO_AC_ANALYSIS + ac_analysis_filename):
+            sound_irrelevance_list.append((sound,irrelevance))
     
     sound_irrelevance_sorted = sorted(sound_irrelevance_list, key=lambda x: x[1])
     sound_irrelevance_ids = [lis[0] for lis in sound_irrelevance_sorted]
