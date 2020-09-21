@@ -1,19 +1,63 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
         <style>
             body {
-                font-family: Helvetica, Arial, sans-serif;
+                font-family: 'Roboto', sans-serif;
                 padding: 30px;
+            }
+            img {
+                vertical-align: text-bottom;
+                align-content: center;
+                max-width: 30%;
+                margin-left: auto;
+                margin-right: auto;}
+            p.small_text {
+                max-width: 600px;
+                font-size:medium;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 1%;
+            }
+            p.small_text2 {
+                max-width: 600px;
+                font-size:larger;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 1%;
+            }
+            p.large_text {
+                margin:0px;
+                font-size: xx-large;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 4%;
+                margin-top: 2%;
             }
         </style>
     </head>
-    <body>
-        <p>You do not have sounds assigned to you!</p>
+    <body onload="test_browser();">
+        <p class="large_text"><img src="g3749.png" alt="Freesound Logo"></p>
+        <p class="small_text2">You do not have sounds assigned to you!</p>
         {% if enable_auto_assign_annotations %}
-        <p>Want some?
+        <p class="small_text2">Want some?
         <a href="/fslannotator/assign">Assign {{N}} sounds!</a>
         </p>
         {% endif %}
+        <p class="small_text">We don't collect any personal information using this tool. The annotations that you provide will  be stored linked to an ID of your account, and will only be used for the purpose of building the dataset.</p>
+        <script>
+            function test_browser(){
+                if(navigator.userAgent.indexOf("Chrome") == -1)
+                {
+                    alert('In order to annotate loops, please use Google Chrome. We do not assure the system will work as desired in any other browser.')
+                }
+            }
+
+        </script>
+
     </body>
 </html>
