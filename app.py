@@ -71,6 +71,8 @@ def assign_more_sounds_to_user(username, N=default_N_assign_more_sounds):
 
 @app.route('/fslannotator/assign', methods = ['GET', 'POST'])
 def assign():
+    if 'username' not in session:
+        return render_template("welcome.html")
     assign_more_sounds_to_user(session["username"])
     return redirect(url_for('annotate'))
 
@@ -143,6 +145,8 @@ def welcome():
 @app.route('/fslannotator/annotate/', methods = ['GET', 'POST'])
 def annotate():
     
+    if 'username' not in session:
+        return render_template("welcome.html")
 
     assigned_sounds_path = os.path.join(PATH_TO_USER_FOLDER, session["username"] + '.json')
     if not os.path.exists(assigned_sounds_path):
