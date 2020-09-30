@@ -5,6 +5,13 @@ It is an annotation tool that was created for building a dataset of loops from F
 
 This app is hosted online and accessible at https://mtg.upf.edu/fslannotator/
 
+The full dataset can be found in https://zenodo.org/record/3967852
+
+The full paper is available at https://arxiv.org/abs/2008.11507 and extra results and examples are provided at https://aframires.github.io/freesound-loop-annotator/
+
+If you use this work for research, please cite:
+
+```@inproceedings{ramires2020, author = "Antonio Ramires and Frederic Font and Dmitry Bogdanov and Jordan B. L. Smith and Yi-Hsuan Yang and Joann Ching and Bo-Yu Chen and Yueh-Kao Wu and Hsu Wei-Han and Xavier Serra", title = "The Freesound Loop Dataset and Annotation Tool", booktitle = "Proc. of the 21st International Society for Music Information Retrieval (ISMIR)", year = "2020" }```
 
 # How to run locally
 
