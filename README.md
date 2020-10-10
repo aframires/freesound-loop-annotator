@@ -39,3 +39,11 @@ Reloading `http://localhost:5000/fslannotator/` will present you the last unnano
 The annotations are stored using JSON files saved inside the `annotations/` inside the `FSL10K` folder mounted in the container. Once all sounds are annotated, zip the annotations directory and please send the file as per the email instructions.
 
 Before annotating, please check the genre taxonomy provided in [here](https://docs.google.com/document/d/1Rj8mSoDewvnmrTs8HK2yRJ4AgUUf7Ft-JW2xN_bd6P4/edit?usp=sharing) to familiarise yourself on how to annotate genres.
+
+# Running the Evaluation
+
+In order to get the proposed benchmarks and evaluation metrics:
+- Download the dataset from [Zenodo](https://zenodo.org/record/3967852) and add it inside the static folder of the directory.
+- Run the [analyse_data.py](data_analysis/analyse_data.py) file to obtain the inter-annotator agreement.
+- Run the [benchmark.py](data_analysis/benchmark.py) file to obtain the statistics of the dataset (key, tempo distribution) and the benchmarking values.
+- Run the code provided in Jordan Smith's [repo](https://github.com/jblsmith/ismir2020-loops) to obtain the music generation and decomposition evaluation.
