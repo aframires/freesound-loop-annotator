@@ -1,4 +1,18 @@
-# Freesound Loop Dataset Benchmarking Results
+# Freesound Loop Dataset
+
+The Loop Annotator is a Flask web application that allows to annotate loops from Freesound. With it, we created a dataset of Creative Commons loops, with professional quality and perfect for research!
+
+This annotator is hosted online and accessible at https://mtg.upf.edu/fslannotator/
+
+The full dataset can be found in https://zenodo.org/record/3967852
+
+The full paper is available at https://arxiv.org/abs/2008.11507 and extra results and, in this page, we present some of the results that we were not able to include in the paper. 
+
+If you use this work for research, please cite:
+
+```@inproceedings{ramires2020, author = "Antonio Ramires and Frederic Font and Dmitry Bogdanov and Jordan B. L. Smith and Yi-Hsuan Yang and Joann Ching and Bo-Yu Chen and Yueh-Kao Wu and Hsu Wei-Han and Xavier Serra", title = "The Freesound Loop Dataset and Annotation Tool", booktitle = "Proc. of the 21st International Society for Music Information Retrieval (ISMIR)", year = "2020" }```
+
+# Benchmarking Results
 
 In this page, we present the full results of the benchmarking for the Freesound Loop Dataset.
 
@@ -107,7 +121,7 @@ For key estimation, we use the MIREX metrics for the Audio Key Detection. These 
 
 ## Music Generation
 
-In this section, we present example templates used for the generation of music pieces from loops, and some audio examples of the generated pieces.
+In this section, we present example templates used for the generation of music pieces from loops, and some audio examples of the generated pieces. The code to run this experiments can be obtained at Jordan Smith's [repo](https://github.com/jblsmith/ismir2020-loops).
 
 ### Example Layouts
 
