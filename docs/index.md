@@ -2,11 +2,11 @@
 
 The Loop Annotator is a Flask web application that allows to annotate loops from Freesound. With it, we created a dataset of Creative Commons loops, with professional quality and perfect for research!
 
-This annotator is hosted online and accessible at https://mtg.upf.edu/fslannotator/
+This annotator is hosted online and accessible [here](https://mtg.upf.edu/fslannotator/).
 
-The full dataset can be found in https://zenodo.org/record/3967852
+The full dataset can be found in [Zenodo](https://zenodo.org/record/3967852).
 
-The full paper is available at https://arxiv.org/abs/2008.11507 and extra results and, in this page, we present some of the results that we were not able to include in the paper. 
+The full paper, poster and presentation are available at [ISMIR website](https://program.ismir2020.net/poster_2-16.html) and, in this page, we present some of the results that we were not able to include in the paper. 
 
 If you use this work for research, please cite:
 
@@ -125,22 +125,22 @@ In this section, we present example templates used for the generation of music p
 
 ### Example Layouts
 
-![Example Layouts](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/layout_examples.png "Example layouts for music generation.")
+![Example Layouts](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/layout_examples.png "Example layouts for music generation.")
 
 ### Music Examples
 Sparse Layout
-[Sparse1](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/act_1_0.mp3)
-[Sparse2](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/act_1_1.mp3)
+[Sparse1](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/act_1_0.mp3)
+[Sparse2](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/act_1_1.mp3)
 
 Dense Layout
-[Dense1](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/act_2_0.mp3)
-[Dense2](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/act_2_1.mp3)
+[Dense1](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/act_2_0.mp3)
+[Dense2](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/act_2_1.mp3)
 
 Factorial Layout
-[Factorial1](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/facto_0.mp3)
-[Factorial2](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/facto_1.mp3)
+[Factorial1](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/facto_0.mp3)
+[Factorial2](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/facto_1.mp3)
 
 Composed Layout
-[Composed1](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/lopez_0.mp3)
-[Composed2](https://github.com/aframires/freesound-loop-annotator/tree/master/docs/audios/lopez_1.mp3)
+[Composed1](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/lopez_0.mp3)
+[Composed2](https://raw.githubusercontent.com/aframires/freesound-loop-annotator/master/docs/audios/lopez_1.mp3)
 
