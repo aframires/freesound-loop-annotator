@@ -3,12 +3,13 @@
 The Loop Annotator is a Flask web application that is meant to run locally in your computer.
 It is an annotation tool that was created for building a dataset of loops from Freesound.
 
-This app is hosted online and accessible at https://mtg.upf.edu/fslannotator/
+The Loop Annotator is a Flask web application that allows to annotate loops from Freesound. With it, we created a dataset of Creative Commons loops, with professional quality and perfect for research!
 
-The full dataset can be found in https://zenodo.org/record/3967852
+This annotator is hosted online and accessible [here](https://mtg.upf.edu/fslannotator/).
 
-The full paper is available at https://arxiv.org/abs/2008.11507 and extra results and examples are provided at https://aframires.github.io/freesound-loop-annotator/
+The full dataset can be found in [Zenodo](https://zenodo.org/record/3967852).
 
+The full paper, poster and presentation are available at [ISMIR website](https://program.ismir2020.net/poster_2-16.html) and, in [this page](https://aframires.github.io/freesound-loop-annotator/), we present some of the results that we were not able to include in the paper. 
 If you use this work for research, please cite:
 
 ```@inproceedings{ramires2020, author = "Antonio Ramires and Frederic Font and Dmitry Bogdanov and Jordan B. L. Smith and Yi-Hsuan Yang and Joann Ching and Bo-Yu Chen and Yueh-Kao Wu and Hsu Wei-Han and Xavier Serra", title = "The Freesound Loop Dataset and Annotation Tool", booktitle = "Proc. of the 21st International Society for Music Information Retrieval (ISMIR)", year = "2020" }```
