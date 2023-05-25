@@ -9,7 +9,7 @@ scipy==0.16.1
 seaborn==0.6.0
 six==1.10.0
 pyzmq>=13
-tornado==4.3
+tornado==6.3.2
 jsonschema==2.5.1
 jupyter==1.0.0
 Cython
